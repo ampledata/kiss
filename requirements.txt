@@ -1,0 +1,15 @@
+# Python Distribution Package Requirements for kiss.
+#
+# Source:: https://github.com/ampledata/kiss
+# Author:: Greg Albrecht <gba@onbeep.com>
+# Copyright:: Copyright 2013 OnBeep, Inc.
+# License:: Apache License 2.0
+
+
+flake8
+clonedigger
+coverage
+mock
+nose
+pylint
+pep8
