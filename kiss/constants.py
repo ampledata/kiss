@@ -8,6 +8,15 @@ __copyright__ = 'Copyright 2013 OnBeep, Inc.'
 __license__ = 'Apache License 2.0'
 
 
+import logging
+
+
+LOG_LEVEL = logging.DEBUG
+LOG_FORMAT = ('%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
+              ' - %(message)s')
+SERIAL_TIMEOUT = 0.01
+READ_BYTES = 1000
+
 # KISS Special Characters
 # http://en.wikipedia.org/wiki/KISS_(TNC)#Special_Characters
 FEND = chr(0xC0)

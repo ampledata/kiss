@@ -24,13 +24,13 @@ def read_readme():
 setuptools.setup(
     name='kiss',
     version='0.0.1',
-    description='KISS is a protocol for communicating with a ' +
-                'serial TNC device used for Amateur Radio.',
+    description=('KISS is a protocol for communicating with a serial TNC '
+                 'device used for Amateur Radio.'),
     author='Greg Albrecht',
     author_email='gba@onbeep.com',
-    long_description='A Python implementation of the KISS Protocol ' +
-                     'for communicating with serial TNC devices for ' +
-                     'use with Amateur Radio.',
+    long_description=('A Python implementation of the KISS Protocol for '
+                      'communicating with serial TNC devices for use with '
+                      'Amateur Radio.'),
     license='Apache License 2.0',
     copyright='Copyright 2013 OnBeep, Inc.',
     url='https://github.com/ampledata/kiss',
