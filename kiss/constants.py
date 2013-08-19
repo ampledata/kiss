@@ -11,7 +11,7 @@ __license__ = 'Apache License 2.0'
 import logging
 
 
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 LOG_FORMAT = ('%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
               ' - %(message)s')
 SERIAL_TIMEOUT = 0.01
