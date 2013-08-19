@@ -10,16 +10,17 @@ __license__ = 'Apache License 2.0'
 
 import logging
 
-import constants
+import kiss.constants
 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s.%(funcName)s:%(lineno)d - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+logger.setLevel(kiss.constants.LOG_LEVEL)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(kiss.constants.LOG_LEVEL)
+formatter = logging.Formatter(kiss.constants.LOG_FORMAT)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+logger.propagate = False
 
 
 def escape_special_chars(raw_char):
@@ -33,15 +34,15 @@ def escape_special_chars(raw_char):
 
     Borrowed from dixprs.
     """
-    logger.debug("raw_char=%s" % raw_char)
+    logger.debug('raw_char=%s', raw_char)
     kiss_char = raw_char.replace(
-        constants.FEND,
-        constants.FEND_TFEND
+        kiss.constants.FEND,
+        kiss.constants.FEND_TFEND
     ).replace(
-        constants.FESC,
-        constants.FESC_TFESC
+        kiss.constants.FESC,
+        kiss.constants.FESC_TFESC
     )
-    logger.debug("kiss_char=%s" % kiss_char)
+    logger.debug('kiss_char=%s', kiss_char)
     return kiss_char
 
 
@@ -84,120 +85,173 @@ def valid_callsign(callsign):
     return False
 
 
+# TODO Add example raw frame.
 def extract_callsign(raw_frame):
     """
-    Extracts callsign from raw frame.
+    Extracts callsign from a raw KISS frame.
 
-    Parameters:
-        raw_frame: guess...
+    Test & Example:
+
+        >>> raw_frame = ''
+        >>> a = extract_callsign(raw_frame)
+        >>> a
+        {'callsign': 'W2GMD', 'ssid': 10}
+
+
+    :param raw_frame: Raw KISS Frame to decode.
+    :returns: Dict of callsign and ssid.
+    :rtype: dict
     """
-    logger.debug("raw_frame=%s" % raw_frame)
-    callsign = ''
-
-    for i in range(0, 6):
-        ch = chr(ord(raw_frame[i]) >> 1)
-        if ch == ' ':
-            break
-        callsign = ''.join([callsign, ch])
-
+    logger.debug('raw_frame=%s', raw_frame)
+    callsign = ''.join([chr(ord(x) >> 1) for x in raw_frame[:6]]).strip()
     ssid = (ord(raw_frame[6]) >> 1) & 0x0f
-
-    if callsign.isalnum():
-        if ssid > 0:
-            callsign = '-'.join([callsign, str(ssid)])
-    else:
-        callsign = ''
-
     logger.debug('ssid=%s callsign=%s', ssid, callsign)
-    return callsign
+    return {'callsign': callsign, 'ssid': ssid}
 
 
-def hdump(hstr):
-    logger.debug('hstr=%s', hstr)
+def full_callsign(raw_frame):
+    """
+    Extract raw frame and returns full callsign (call + ssid).
 
-    i = 0
-    k = 0
-
-    word1 = ''
-    word2 = ''
-
-    for pstr in hstr:
-        rstr = ord(pstr)
-        word1 += '%02X ' % rstr
-
-        if rstr < 32 or rstr > 127:
-            word2 += '.'
-        else:
-            word2 += pstr
-
-        i += 1
-
-        if i == 16:
-            print '%04X' % (k), word1, word2
-            word1 = ''
-            word2 = ''
-            i = 0
-            k += 16
-
-    if not i == 0:
-        logger.debug('%04X %-48s %s', k, word1, word2)
-        print '%04X %-48s %s' % (k, word1, word2)
+    :param raw_frame: Raw KISS Frame to extract callsign from.
+    :returns: Callsign[-SSID].
+    :rtype: str
+    """
+    extracted = extract_callsign(raw_frame)
+    if extracted['ssid'] > 0:
+        return '-'.join([extracted['callsign'], str(extracted['ssid'])])
+    else:
+        return extracted['callsign']
 
 
-def raw2txt(raw):
-    logger.debug('raw=%s', raw)
-    hdump(raw)
+def extract_path(start, raw_frame):
+    full_path = []
 
-    # Is it too short?
-    if len(raw) < 16:
-        hdump(raw)
-        return ''
+    for i in range(2, start):
+        path = full_callsign(raw_frame[i * 7:])
+        if path:
+            if ord(raw_frame[i * 7 + 6]) & 0x80:
+                full_path.append(''.join([path, '*']))
+            else:
+                full_path.append(path)
+    return full_path
 
-    raw1 = ''
 
-    for i in range(0, len(raw)):
-        if ord(raw[i]) & 0x01:
-            break
+def format_path(start, raw_frame):
+    return ','.join(extract_path(start, raw_frame))
 
-    # Is address field length correct?
-    if not ((i + 1) % 7) == 0:
-        return ''
 
-    n = (i + 1) / 7
+def decode_aprs_frame(raw_frame):
+    logger.debug('raw_frame=%s', raw_frame)
+    decoded_frame = {}
 
-    # Less than 2 callsigns?
-    if n < 2 or n > 10:
-        return ''
+    frame_len = len(raw_frame)
+    logger.debug('frame_len=%s', frame_len)
 
-    if (i + 1) % 7 == 0 and n >= 2 and ord(raw[i + 1]) & 0x03 == 0x03 and ord(raw[i + 2]) == 0xf0:
-        strinfo = raw[i + 3:]
+    if frame_len > 16:
+        for raw_slice in range(0, frame_len):
+            # Is address field length correct?
+            if ord(raw_frame[raw_slice]) & 0x01 and ((raw_slice + 1) % 7) == 0:
+                n = (raw_slice + 1) / 7
+                # Less than 2 callsigns?
+                if n >= 2 and n < 10:
+                    logger.debug('n=%s', n)
+                    break
 
-        if len(strinfo):
-            strto = extract_callsign(raw)
+        if (ord(raw_frame[raw_slice + 1]) & 0x03 == 0x03 and
+                ord(raw_frame[raw_slice + 2]) == 0xf0):
+            decoded_frame['text'] = raw_frame[raw_slice + 3:]
+            decoded_frame['destination'] = full_callsign(raw_frame)
+            decoded_frame['source'] = full_callsign(raw_frame[7:])
+            decoded_frame['path'] = format_path(n, raw_frame)
 
-            if strto == '':
-                return ''
+    return decoded_frame
 
-            strfrom = extract_callsign(raw[7:])
 
-            if strfrom == '' or valid_callsign(strfrom):
-                return ''
+def format_aprs_frame(raw_frame):
+    logger.debug('raw_frame=%s', raw_frame)
+    decoded_frame = decode_aprs_frame(raw_frame)
+    formatted_frame = '>'.join([
+        decoded_frame['source'], decoded_frame['destination']])
+    formatted_frame = ','.join([formatted_frame, decoded_frame['path']])
+    formatted_frame = ':'.join([formatted_frame, decoded_frame['text']])
+    logger.debug('formatted_frame=%s', formatted_frame)
+    return formatted_frame
 
-            raw1 = '>'.join([strfrom, strto])
 
-            for i in range(2, n):
-                s = extract_callsign(raw[i * 7:])
+def kk2(ctxt):
+    logger.debug(locals())
+    if ctxt[-1] == '*':
+        s = ctxt[:-1]
+        digi = True
+    else:
+        s = ctxt
+        digi = False
 
-                if s == '':
-                    hdump(raw)
-                    return ''
+    ssid = 0
+    w1 = s.split('-')
 
-                raw1 += ''.join([',', s])
+    call = w1[0]
 
-                if ord(raw[i * 7 + 6]) & 0x80:
-                    raw1 += '*'
+    while len(call) < 6:
+        call += ' '
 
-            raw1 += ''.join([':', strinfo])
+    r = ''
 
-    logger.debug('raw1=%s', raw1)
-    return raw1
+    for p in call:
+        r += chr(ord(p) << 1)
+
+    if not len(w1) == 1:
+        try:
+            ssid = int(w1[1])
+        except ValueError:
+            return ''
+
+    ct = (ssid << 1) | 0x60
+
+    if digi:
+        ct |= 0x80
+
+    return r + chr(ct)
+
+
+def txt2raw(s):
+    logger.debug(locals())
+    ix = s.find(':')
+
+    if ix:
+        hdr = s[:ix]
+        inf = s[ix + 1:]
+
+        w1 = hdr.split('>')
+        call_from = w1[0]
+
+        w2 = w1[1].split(',')
+        call_to = w2[0]
+
+        r = kk2(call_to) + kk2(call_from)
+
+        for i in range(1, len(w2)):
+            if len(w2[i]) > 1:
+                r += kk2(w2[i])
+
+        rr = ''.join([
+            r[:-1],
+            chr(ord(r[-1]) | 0x01),
+            kiss.constants.SLOT_TIME,
+            chr(0xf0),
+            inf
+        ])
+        return rr
+
+
+def raw2kiss(raw):
+    """
+    Escape special characters to make it binary transparent.
+
+    Inspired by dixprs.
+    """
+    return raw.replace(
+        kiss.constants.FEND,
+        ''.join([kiss.constants.FESC, kiss.constants.TFEND])
+    ).replace(kiss.constants.FEND, kiss.constants.FESC_TFESC)

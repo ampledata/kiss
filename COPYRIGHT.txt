@@ -1,0 +1,3 @@
+1. Original components are Copyright 2013 OnBeep, Inc.
+
+2. Components derived from dixprs are Copyright 2013 Bela Markus.
