@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Setup for kiss.
+Setup for the KISS Python Module.
 
 Source:: https://github.com/ampledata/kiss
 """
@@ -12,29 +12,38 @@ __copyright__ = 'Copyright 2013 Onbeep, Inc.'
 __license__ = 'Apache License 2.0'
 
 
-import setuptools
+import os
+import sys
+
+import kiss
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 
-def read_readme():
-    """Reads in README file for use in setuptools."""
-    with open('README.rst') as rmf:
-        rmf.read()
+def publish():
+    if sys.argv[-1] == 'publish':
+        os.system('python setup.py sdist upload')
+        sys.exit()
 
 
-setuptools.setup(
+publish()
+
+
+setup(
     name='kiss',
-    version='0.0.2',
-    description=('KISS is a protocol for communicating with a serial TNC '
-                 'device used for Amateur Radio.'),
+    version=kiss.__version__,
+    description='KISS Python Module.',
+    long_description=open('README.rst').read(),
     author='Greg Albrecht',
     author_email='gba@onbeep.com',
-    long_description=('A Python implementation of the KISS Protocol for '
-                      'communicating with serial TNC devices for use with '
-                      'Amateur Radio.'),
-    license='See LICENSE.txt',
-    copyright='See COPYRIGHT.txt',
+    license=open('LICENSE').read(),
     url='https://github.com/ampledata/kiss',
     setup_requires=['nose'],
     tests_require=['coverage', 'nose'],
-    install_requires=['pyserial']
+    install_requires=['pyserial'],
+    package_dir={'kiss': 'kiss'},
+    zip_safe=False
 )
