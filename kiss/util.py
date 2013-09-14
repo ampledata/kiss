@@ -39,3 +39,13 @@ def escape_special_codes(raw_codes):
         kiss.constants.FEND,
         kiss.constants.FESC_TFEND
     )
+
+
+def unescape_special_codes(codes):
+    return codes.replace(
+        chr(0xc0),
+        chr(0xdb) + chr(0xdc)
+    ).replace(
+        chr(0xc0),
+        chr(0xdb) + chr(0xdd)
+    )

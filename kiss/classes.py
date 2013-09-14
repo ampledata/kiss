@@ -34,6 +34,17 @@ class KISS(object):
         self.speed = speed
         self.serial_int = None  # TODO Potentially very f*cking unsafe.
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.serial_int and self.serial_int.isOpen():
+            self.serial_int.close()
+
+    def __del__(self):
+        if self.serial_int and self.serial_int.isOpen():
+            self.serial_int.close()
+
     def start(self):
         """
         Initializes the KISS device and commits configuration.
@@ -68,6 +79,7 @@ class KISS(object):
 
         :param callback: Callback to call with decoded data.
         """
+        self.logger.debug('callback=%s', callback)
         read_buffer = ''
         while 1:
             read_data = self.serial_int.read(kiss.constants.READ_BYTES)
