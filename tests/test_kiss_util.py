@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for KISS Module."""
+"""Tests for KISS Util Module."""
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
 __copyright__ = 'Copyright 2013 OnBeep, Inc.'
@@ -16,7 +16,7 @@ from . import constants
 
 
 # pylint: disable=R0904,C0103
-class KISSTestCase(unittest.TestCase):
+class KISSUtilTestCase(unittest.TestCase):
 
     """Test class for KISS Python Module."""
 

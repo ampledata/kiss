@@ -25,6 +25,7 @@ except ImportError:
 
 
 def publish():
+    """Function for publishing package to pypi."""
     if sys.argv[-1] == 'publish':
         os.system('python setup.py sdist upload')
         sys.exit()
