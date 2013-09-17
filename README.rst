@@ -1,5 +1,7 @@
 A pure-Python implementation of the KISS Protocol for communicating with serial TNC devices for use with Amateur Radio.
 
+.. image:: https://travis-ci.org/ampledata/kiss.png?branch=develop   :target: https://travis-ci.org/ampledata/kiss
+
 Installation
 ============
 Install from pypi using pip::
