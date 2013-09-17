@@ -16,8 +16,8 @@ KISS Python Module.
 """
 
 __title__ = 'kiss'
-__version__ = '0.0.3'
-__build__ = '0x000003'
+__version__ = '1.0.0'
+__build__ = '0x010000'
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
 __license__ = 'Apache License, Version 2.0'
 __copyright__ = 'Copyright 2013 OnBeep, Inc.'
