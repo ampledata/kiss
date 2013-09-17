@@ -5,22 +5,10 @@
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
 __copyright__ = 'Copyright 2013 OnBeep, Inc.'
-__license__ = 'Apache 2.0'
+__license__ = 'Apache License, Version 2.0'
 
-
-import logging
 
 import kiss.constants
-
-
-logger = logging.getLogger(__name__)
-logger.setLevel(kiss.constants.LOG_LEVEL)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(kiss.constants.LOG_LEVEL)
-formatter = logging.Formatter(kiss.constants.LOG_FORMAT)
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
-logger.propagate = False
 
 
 def escape_special_codes(raw_codes):
@@ -38,14 +26,4 @@ def escape_special_codes(raw_codes):
     ).replace(
         kiss.constants.FEND,
         kiss.constants.FESC_TFEND
-    )
-
-
-def unescape_special_codes(codes):
-    return codes.replace(
-        chr(0xc0),
-        chr(0xdb) + chr(0xdc)
-    ).replace(
-        chr(0xc0),
-        chr(0xdb) + chr(0xdd)
     )

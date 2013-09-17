@@ -8,8 +8,8 @@ Source:: https://github.com/ampledata/kiss
 """
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
-__copyright__ = 'Copyright 2013 Onbeep, Inc.'
-__license__ = 'Apache License 2.0'
+__copyright__ = 'Copyright 2013 OnBeep, Inc.'
+__license__ = 'Apache License, Version 2.0'
 
 
 import os
@@ -20,6 +20,7 @@ import kiss
 try:
     from setuptools import setup
 except ImportError:
+    # pylint: disable=F0401,E0611
     from distutils.core import setup
 
 

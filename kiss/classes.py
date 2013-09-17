@@ -5,7 +5,7 @@
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
 __copyright__ = 'Copyright 2013 OnBeep, Inc.'
-__license__ = 'Apache 2.0'
+__license__ = 'Apache License, Version 2.0'
 
 
 import logging
@@ -32,7 +32,7 @@ class KISS(object):
     def __init__(self, port, speed):
         self.port = port
         self.speed = speed
-        self.serial_int = None  # TODO Potentially very f*cking unsafe.
+        self.serial_int = None
 
     def __enter__(self):
         return self
@@ -53,8 +53,9 @@ class KISS(object):
         self.serial_int = serial.Serial(self.port, self.speed)
         self.serial_int.timeout = kiss.constants.SERIAL_TIMEOUT
 
+        # TODO: Configuration section is incomplete - ampledata.
         # http://en.wikipedia.org/wiki/KISS_(TNC)#Command_Codes
-        kiss_config = {}  # TODO Yes, this isn't complete.
+        kiss_config = {}
         for setting in ['TX_DELAY', 'PERSISTENCE', 'SLOT_TIME', 'TX_TAIL',
                         'FULL_DUPLEX']:
             if kiss_config.get(setting):
@@ -81,6 +82,7 @@ class KISS(object):
         """
         self.logger.debug('callback=%s', callback)
         read_buffer = ''
+
         while 1:
             read_data = self.serial_int.read(kiss.constants.READ_BYTES)
 

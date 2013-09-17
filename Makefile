@@ -1,9 +1,9 @@
-# Makefile for kiss
+# Makefile for KISS Python Module.
 #
 # Source:: https://github.com/ampledata/kiss
-# Author:: Greg Albrecht <gba@splunk.com>
+# Author:: Greg Albrecht W2GMD <gba@onbeep.com>
 # Copyright:: Copyright 2013 OnBeep, Inc.
-# License:: Apache License 2.0
+# License:: Apache License, Version 2.0
 #
 
 
@@ -11,10 +11,6 @@ init:
 	pip install -r requirements.txt --use-mirrors
 
 lint:
-	pylint -f parseable -i y -r y kiss/*.py tests/*.py *.py | \
-		tee pylint.log
-
-cli_lint:
 	pylint -f colorized -i y -r n kiss/*.py tests/*.py *.py
 
 flake8:
@@ -44,7 +40,7 @@ publish:
 nosetests:
 	python setup.py nosetests
 
-test: init lint flake8 clonedigger nosetests
+test: init clonedigger nosetests lint flake8
 
 clean:
 	rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg nosetests.xml \
