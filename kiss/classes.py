@@ -65,6 +65,8 @@ class KISS(object):
         """
         Writes KISS Command Codes to attached device.
 
+        http://en.wikipedia.org/wiki/KISS_(TNC)#Command_Codes
+
         :param setting: KISS Command Code to write.
         """
         return self.serial_int.write(
@@ -126,10 +128,7 @@ class KISS(object):
                 # Loop through received frames
                 for frame in frames:
                     if len(frame) and ord(frame[0]) == 0:
-                        with open('full_frame.log', 'a+') as full_frame:
-                            full_frame.write(frame[1:] + '\n')
-
-                        self.logger.info('frame=%s', frame)
+                        self.logger.debug('frame=%s', frame)
                         if callback:
                             callback(frame)
 
