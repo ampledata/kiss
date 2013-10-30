@@ -7,6 +7,9 @@ Setup for the KISS Python Module.
 Source:: https://github.com/ampledata/kiss
 """
 
+__title__ = 'kiss'
+__version__ = '1.0.1'
+__build__ = '0x010001'
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
 __copyright__ = 'Copyright 2013 OnBeep, Inc.'
 __license__ = 'Apache License, Version 2.0'
@@ -15,7 +18,6 @@ __license__ = 'Apache License, Version 2.0'
 import os
 import sys
 
-import kiss
 
 try:
     from setuptools import setup
@@ -35,8 +37,8 @@ publish()
 
 
 setup(
-    name='kiss',
-    version=kiss.__version__,
+    name=__title__,
+    version=__version__,
     description='KISS Python Module.',
     long_description=open('README.rst').read(),
     author='Greg Albrecht',
