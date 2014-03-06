@@ -8,7 +8,7 @@
 
 
 init:
-	pip install -r requirements.txt --use-mirrors
+	pip install -r requirements.txt
 
 lint:
 	pylint -f colorized -i y -r n kiss/*.py tests/*.py *.py
