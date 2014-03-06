@@ -4,7 +4,7 @@
 """Constants for KISS Python Module."""
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
-__copyright__ = 'Copyright 2013 OnBeep, Inc.'
+__copyright__ = 'Copyright 2013 OnBeep, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
