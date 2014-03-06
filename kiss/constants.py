@@ -41,3 +41,21 @@ TX_TAIL = chr(0x04)
 FULL_DUPLEX = chr(0x05)
 SET_HARDWARE = chr(0x06)
 RETURN = chr(0xFF)
+
+# Alternate convenience spellings for Command Codes
+# (these more closely match the names in the spec)
+DATAFRAME = DATA_FRAME
+TXDELAY = TX_DELAY
+P = PERSISTENCE
+SLOTTIME = SLOT_TIME
+TXTAIL = TX_TAIL
+FULLDUPLEX = FULL_DUPLEX
+SETHARDWARE = SET_HARDWARE
+
+DEFAULT_KISS_CONFIG_VALUES = {
+    'TX_DELAY': 40,
+    'PERSISTENCE': 63,
+    'SLOT_TIME': 20,
+    'TX_TAIL': 30,
+    'FULL_DUPLEX': 0,
+    }
