@@ -56,7 +56,7 @@ http://ampledata.org/
 
 Copyright
 =========
-Copyright 2013 OnBeep, Inc.
+Copyright 2013 OnBeep, Inc. and Contributors
 
 
 License
