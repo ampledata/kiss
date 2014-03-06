@@ -2,13 +2,13 @@
 #
 # Source:: https://github.com/ampledata/kiss
 # Author:: Greg Albrecht W2GMD <gba@onbeep.com>
-# Copyright:: Copyright 2013 OnBeep, Inc.
+# Copyright:: Copyright 2013 OnBeep, Inc. and Contributors
 # License:: Apache License, Version 2.0
 #
 
 
 init:
-	pip install -r requirements.txt --use-mirrors
+	pip install -r requirements.txt
 
 lint:
 	pylint -f colorized -i y -r n kiss/*.py tests/*.py *.py
