@@ -54,7 +54,7 @@ class KISS(object):
 
         :param **kwargs: name/value pairs to use as initial config values.
         """
-        self.logger.debug('start()')
+        self.logger.debug("kwargs=%s", kwargs)
         self.serial_int = serial.Serial(self.port, self.speed)
         self.serial_int.timeout = kiss.constants.SERIAL_TIMEOUT
 
@@ -73,7 +73,7 @@ class KISS(object):
         http://en.wikipedia.org/wiki/KISS_(TNC)#Command_Codes
 
         :param name: KISS Command Code Name as a string.
-        :param value: KISS Command Code value to write.
+        :param value: KISS Command Code Value to write.
         """
         self.logger.debug('Configuring %s = %s', name, repr(value))
 

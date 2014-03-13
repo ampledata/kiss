@@ -7,11 +7,16 @@
 #
 
 
-init:
+.DEFAULT_GOAL := init
+
+
+init: install_requirements develop
+
+install_requirements:
 	pip install -r requirements.txt
 
 lint:
-	pylint -f colorized -i y -r n kiss/*.py tests/*.py *.py
+	pylint -f colorized -r n kiss/*.py tests/*.py *.py
 
 flake8:
 	flake8 --exit-zero  --max-complexity 12 kiss/*.py tests/*.py *.py | \
