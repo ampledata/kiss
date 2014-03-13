@@ -49,5 +49,6 @@ setup(
     tests_require=['coverage', 'nose'],
     install_requires=['pyserial'],
     package_dir={'kiss': 'kiss'},
+    packages=['kiss'],
     zip_safe=False
 )
