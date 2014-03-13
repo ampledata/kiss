@@ -2,7 +2,7 @@
 #
 # Source:: https://github.com/ampledata/kiss
 # Author:: Greg Albrecht W2GMD <gba@onbeep.com>
-# Copyright:: Copyright 2013 OnBeep, Inc.
+# Copyright:: Copyright 2013 OnBeep, Inc. and Contributors
 # License:: Apache License, Version 2.0
 #
 

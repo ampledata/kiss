@@ -9,7 +9,7 @@ KISS Python Module.
 
 
 :author: Greg Albrecht W2GMD <gba@onbeep.com>
-:copyright: Copyright 2013 OnBeep, Inc.
+:copyright: Copyright 2013 OnBeep, Inc. and Contributors
 :license: Apache License, Version 2.0
 :source: <https://github.com/ampledata/kiss>
 
@@ -17,7 +17,7 @@ KISS Python Module.
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
 __license__ = 'Apache License, Version 2.0'
-__copyright__ = 'Copyright 2013 OnBeep, Inc.'
+__copyright__ = 'Copyright 2013 OnBeep, Inc. and Contributors'
 
 
 import logging

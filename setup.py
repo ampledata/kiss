@@ -8,10 +8,10 @@ Source:: https://github.com/ampledata/kiss
 """
 
 __title__ = 'kiss'
-__version__ = '1.0.1'
-__build__ = '0x010001'
+__version__ = '2.0.0'
+__build__ = '0x020000'
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
-__copyright__ = 'Copyright 2013 OnBeep, Inc.'
+__copyright__ = 'Copyright 2013 OnBeep, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 

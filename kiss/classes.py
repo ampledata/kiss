@@ -4,7 +4,7 @@
 """KISS Core Classes."""
 
 __author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
-__copyright__ = 'Copyright 2013 OnBeep, Inc.'
+__copyright__ = 'Copyright 2013 OnBeep, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -45,34 +45,46 @@ class KISS(object):
         if self.serial_int and self.serial_int.isOpen():
             self.serial_int.close()
 
-    def start(self):
+    def start(self, **kwargs):
         """
         Initializes the KISS device and commits configuration.
+
+        See http://en.wikipedia.org/wiki/KISS_(TNC)#Command_codes
+        for configuration names.
+
+        :param **kwargs: name/value pairs to use as initial config values.
         """
-        self.logger.debug('start()')
+        self.logger.debug("kwargs=%s", kwargs)
         self.serial_int = serial.Serial(self.port, self.speed)
         self.serial_int.timeout = kiss.constants.SERIAL_TIMEOUT
 
-        # TODO: Configuration section is incomplete - ampledata.
-        # http://en.wikipedia.org/wiki/KISS_(TNC)#Command_Codes
-        kiss_config = {}
-        for setting in ['TX_DELAY', 'PERSISTENCE', 'SLOT_TIME', 'TX_TAIL',
-                        'FULL_DUPLEX']:
-            if kiss_config.get(setting):
-                self.write_setting(kiss_config[setting])
+        # If no settings specified, default to config values similar
+        # to those that ship with xastir.
+        if not kwargs:
+            kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
 
-    def write_setting(self, setting):
+        for name, value in kwargs.items():
+            self.write_setting(name, value)
+
+    def write_setting(self, name, value):
         """
         Writes KISS Command Codes to attached device.
 
         http://en.wikipedia.org/wiki/KISS_(TNC)#Command_Codes
 
-        :param setting: KISS Command Code to write.
+        :param name: KISS Command Code Name as a string.
+        :param value: KISS Command Code Value to write.
         """
+        self.logger.debug('Configuring %s = %s', name, repr(value))
+
+        # Do the reasonable thing if a user passes an int
+        if type(value) == int:
+            value = chr(value)
+
         return self.serial_int.write(
             kiss.constants.FEND +
-            kiss.constants.FULL_DUPLEX +
-            kiss.util.escape_special_codes(setting) +
+            getattr(kiss.constants, name.upper()) +
+            kiss.util.escape_special_codes(value) +
             kiss.constants.FEND
         )
 
