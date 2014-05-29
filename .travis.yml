@@ -1,4 +1,4 @@
-script: 'make test'
+script: 'make nosetests'
 python:
   - "2.7"
   - "2.6"
