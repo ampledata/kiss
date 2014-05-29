@@ -7,37 +7,29 @@
 #
 
 
-.DEFAULT_GOAL := init
+.DEFAULT_GOAL := all
 
 
-init: install_requirements develop
+all: install_requirements develop
+
+develop:
+	python setup.py develop
+
+install:
+	python setup.py install
+
+uninstall:
+	pip uninstall -y kiss
 
 install_requirements:
 	pip install -r requirements.txt
 
-lint:
-	pylint -f colorized -r n kiss/*.py tests/*.py *.py
+lint: install_requirements
+	pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" \
+		-r n kiss/*.py tests/*.py || exit 0
 
-flake8:
-	flake8 --exit-zero  --max-complexity 12 kiss/*.py tests/*.py *.py | \
-		awk -F\: '{printf "%s:%s: [E]%s\n", $$1, $$2, $$3}' | tee flake8.log
-
-cli_flake8:
-	flake8 --max-complexity 12 kiss/*.py tests/*.py *.py
-
-pep8: flake8
-
-clonedigger:
-	clonedigger --cpd-output .
-
-install:
-	pip install .
-
-uninstall:
-	pip uninstall kiss
-
-develop:
-	python setup.py develop
+pep8: install_requirements
+	flake8 --max-complexity 12 --exit-zero kiss/*.py tests/*.py
 
 publish:
 	python setup.py register sdist upload
@@ -45,8 +37,8 @@ publish:
 nosetests:
 	python setup.py nosetests
 
-test: init clonedigger nosetests lint flake8
+test: lint pep8 nosetests
 
 clean:
-	rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg nosetests.xml \
-		pylint.log *.egg output.xml flake8.log */*.pyc */*.pyo
+	@rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg
+	nosetests.xml pylint.log output.xml flake8.log */*.pyc */*.pyo

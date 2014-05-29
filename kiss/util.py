@@ -27,3 +27,18 @@ def escape_special_codes(raw_codes):
         kiss.constants.FEND,
         kiss.constants.FESC_TFEND
     )
+
+
+def extract_ui(frame):
+    """
+    Extracts the UI component of an individual frame.
+
+    :param frame: APRS/AX.25 frame.
+    :type frame: str
+    :returns: UI component of frame.
+    :rtype: str
+    """
+    start_ui = frame.split(
+        ''.join([kiss.constants.FEND, kiss.constants.DATA_FRAME]))
+    end_ui = start_ui[0].split(''.join([kiss.constants.SLOT_TIME, chr(0xF0)]))
+    return ''.join([chr(ord(x) >> 1) for x in end_ui[0]])
