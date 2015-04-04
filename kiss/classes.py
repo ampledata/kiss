@@ -11,6 +11,7 @@ __license__ = 'Apache License, Version 2.0'
 import logging
 
 import serial
+import socket
 
 import kiss.constants
 import kiss.util
@@ -29,16 +30,19 @@ class KISS(object):
     logger.addHandler(console_handler)
     logger.propagate = False
 
-    def __init__(self, port, speed):
+    def __init__(self, port=None, speed=None, host=None, tcpport=None):
         self.port = port
         self.speed = speed
+        self.host = host
         self.serial_int = None
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.serial_int and self.serial_int.isOpen():
+        if self.host:
+            self.serial_int.shutdown()
+        elif self.serial_int and self.serial_int.isOpen():
             self.serial_int.close()
 
     def __del__(self):
@@ -55,17 +59,23 @@ class KISS(object):
         :param **kwargs: name/value pairs to use as initial config values.
         """
         self.logger.debug("kwargs=%s", kwargs)
-        self.serial_int = serial.Serial(self.port, self.speed)
-        self.serial_int.timeout = kiss.constants.SERIAL_TIMEOUT
+        if self.host:
+            address = (self.host, self.port)
+            self.serial_int = socket.create_connection(address)
+        else:
+            self.serial_int = serial.Serial(self.port, self.speed)
+            self.serial_int.timeout = kiss.constants.SERIAL_TIMEOUT
 
         # If no settings specified, default to config values similar
         # to those that ship with xastir.
         if not kwargs:
             kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
 
-        for name, value in kwargs.items():
-            self.write_setting(name, value)
+        if not self.host:
+            for name, value in kwargs.items():
+                self.write_setting(name, value)
 
+    
     def write_setting(self, name, value):
         """
         Writes KISS Command Codes to attached device.
@@ -98,9 +108,14 @@ class KISS(object):
         read_buffer = ''
 
         while 1:
-            read_data = self.serial_int.read(kiss.constants.READ_BYTES)
+            if self.host:
+                read_data = self.serial_int.recv(kiss.constants.READ_BYTES)
+                print read_data
+                waiting_data = None
+            else:
+                read_data = self.serial_int.read(kiss.constants.READ_BYTES)
+                waiting_data = self.serial_int.inWaiting()
 
-            waiting_data = self.serial_int.inWaiting()
 
             if waiting_data:
                 read_data = ''.join([
@@ -150,9 +165,18 @@ class KISS(object):
 
         :param frame: Frame to write.
         """
-        return self.serial_int.write(''.join([
-            kiss.constants.FEND,
-            kiss.constants.DATA_FRAME,
-            kiss.util.escape_special_codes(frame),
-            kiss.constants.FEND
-        ]))
+
+        if self.host:
+            return self.serial_int.send(''.join([
+                kiss.constants.FEND,
+                kiss.constants.DATA_FRAME,
+                kiss.util.escape_special_codes(frame),
+                kiss.constants.FEND
+            ]))
+        else:
+            return self.serial_int.write(''.join([
+                kiss.constants.FEND,
+                kiss.constants.DATA_FRAME,
+                kiss.util.escape_special_codes(frame),
+                kiss.constants.FEND
+            ]))
