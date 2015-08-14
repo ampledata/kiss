@@ -1,12 +1,39 @@
+#!/usr/bin/env python
+"""
+Reads & Prints KISS frames from a TCP Socket.
 
+For use with programs like Dire Wolf.
+"""
+
+
+import aprs
 import kiss
-
-k = kiss.KISS(host='10.10.0.214', speed=115200, port=8001)
-k.logger.LOG_LEVEL = "DEBUG"
-k.start()  # inits the TNC, optionally passes KISS config flags.
-# k.write("testing")
-# k.read()
-# k.write('KB3DFZ-5>APDW10,WIDE1-1,WIDE2-1:testing')
-k.read()
+import logging
 
 
+def print_frame(frame):
+    try:
+        # Decode raw APRS frame into dictionary of separate sections
+        decoded_frame = aprs.util.decode_frame(frame)
+
+        # Format the APRS frame (in Raw ASCII Text) as a human readable frame
+        formatted_aprs = aprs.util.format_aprs_frame(decoded_frame)
+
+        # This is the human readable APRS output:
+        print formatted_aprs
+
+    except Exception as ex:
+        print ex
+        print "Error decoding frame:"
+        print "\t%s" % frame
+
+
+def main():
+    ki = kiss.KISS(host='10.42.10.170', tcp_port=8001)
+    ki.logger.setLevel(logging.INFO)
+    ki.start()
+    ki.read(callback=print_frame)
+
+
+if __name__ == '__main__':
+    main()

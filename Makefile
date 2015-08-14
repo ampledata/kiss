@@ -1,8 +1,8 @@
 # Makefile for KISS Python Module.
 #
 # Source:: https://github.com/ampledata/kiss
-# Author:: Greg Albrecht W2GMD <gba@onbeep.com>
-# Copyright:: Copyright 2013 OnBeep, Inc. and Contributors
+# Author:: Greg Albrecht W2GMD <gba@orionlabs.co>
+# Copyright:: Copyright 2015 Orion Labs, Inc. and Contributors
 # License:: Apache License, Version 2.0
 #
 
@@ -19,11 +19,7 @@ lint:
 	pylint -f colorized -r n kiss/*.py tests/*.py *.py
 
 flake8:
-	flake8 --exit-zero  --max-complexity 12 kiss/*.py tests/*.py *.py | \
-		awk -F\: '{printf "%s:%s: [E]%s\n", $$1, $$2, $$3}' | tee flake8.log
-
-cli_flake8:
-	flake8 --max-complexity 12 kiss/*.py tests/*.py *.py
+	flake8 --exit-zero  --max-complexity 12 kiss/*.py tests/*.py *.py
 
 pep8: flake8
 

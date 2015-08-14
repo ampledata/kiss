@@ -3,8 +3,8 @@
 
 """KISS Core Classes."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
-__copyright__ = 'Copyright 2013 OnBeep, Inc. and Contributors'
+__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.co>'
+__copyright__ = 'Copyright 2015 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -30,24 +30,35 @@ class KISS(object):
     logger.addHandler(console_handler)
     logger.propagate = False
 
-    def __init__(self, port=None, speed=None, host=None, tcpport=None):
+    def __init__(self, port=None, speed=None, host=None, tcp_port=None):
         self.port = port
         self.speed = speed
         self.host = host
-        self.serial_int = None
+        self.tcp_port = tcp_port
+        self.interface = None
+        self.interface_mode = None
+
+        if self.port is not None and self.speed is not None:
+            self.interface_mode = 'serial'
+        elif self.host is not None and self.tcp_port is not None:
+            self.interface_mode = 'tcp'
+        if self.interface_mode is None:
+            raise Exception('Must set port/speed or host/tcp_port.')
+
+        self.logger.info('Using interface_mode=%s', self.interface_mode)
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.host:
-            self.serial_int.shutdown()
-        elif self.serial_int and self.serial_int.isOpen():
-            self.serial_int.close()
+        if 'tcp' in self.interface_mode:
+            self.interface.shutdown()
+        elif self.interface and self.interface.isOpen():
+            self.interface.close()
 
     def __del__(self):
-        if self.serial_int and self.serial_int.isOpen():
-            self.serial_int.close()
+        if self.interface and self.interface.isOpen():
+            self.interface.close()
 
     def start(self, **kwargs):
         """
@@ -59,23 +70,23 @@ class KISS(object):
         :param **kwargs: name/value pairs to use as initial config values.
         """
         self.logger.debug("kwargs=%s", kwargs)
-        if self.host:
-            address = (self.host, self.port)
-            self.serial_int = socket.create_connection(address)
-        else:
-            self.serial_int = serial.Serial(self.port, self.speed)
-            self.serial_int.timeout = kiss.constants.SERIAL_TIMEOUT
+
+        if 'tcp' in self.interface_mode:
+            address = (self.host, self.tcp_port)
+            self.interface = socket.create_connection(address)
+        elif 'serial' in self.interface_mode:
+            self.interface = serial.Serial(self.port, self.speed)
+            self.interface.timeout = kiss.constants.SERIAL_TIMEOUT
 
         # If no settings specified, default to config values similar
-        # to those that ship with xastir.
+        # to those that ship with Xastir.
         if not kwargs:
             kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
 
-        if not self.host:
+        if 'serial' in self.interface_mode:
             for name, value in kwargs.items():
                 self.write_setting(name, value)
 
-    
     def write_setting(self, name, value):
         """
         Writes KISS Command Codes to attached device.
@@ -88,10 +99,10 @@ class KISS(object):
         self.logger.debug('Configuring %s = %s', name, repr(value))
 
         # Do the reasonable thing if a user passes an int
-        if type(value) == int:
+        if isinstance(value, int):
             value = chr(value)
 
-        return self.serial_int.write(
+        return self.interface.write(
             kiss.constants.FEND +
             getattr(kiss.constants, name.upper()) +
             kiss.util.escape_special_codes(value) +
@@ -105,23 +116,21 @@ class KISS(object):
         :param callback: Callback to call with decoded data.
         """
         self.logger.debug('callback=%s', callback)
+
         read_buffer = ''
 
         while 1:
-            if self.host:
-                read_data = self.serial_int.recv(kiss.constants.READ_BYTES)
-                print read_data
-                waiting_data = None
-            else:
-                read_data = self.serial_int.read(kiss.constants.READ_BYTES)
-                waiting_data = self.serial_int.inWaiting()
+            read_data = None
+            if 'tcp' in self.interface_mode:
+                read_data = self.interface.recv(kiss.constants.READ_BYTES)
+            elif 'serial' in self.interface_mode:
+                read_data = self.interface.read(kiss.constants.READ_BYTES)
+                waiting_data = self.interface.inWaiting()
+                if waiting_data:
+                    read_data = ''.join([
+                        read_data, self.interface.read(waiting_data)])
 
-
-            if waiting_data:
-                read_data = ''.join([
-                    read_data, self.serial_int.read(waiting_data)])
-
-            if read_data:
+            if read_data is not None:
                 frames = []
 
                 split_data = read_data.split(kiss.constants.FEND)
@@ -157,24 +166,28 @@ class KISS(object):
                     if len(frame) and ord(frame[0]) == 0:
                         self.logger.debug('frame=%s', frame)
                         if callback:
-                            callback(frame)
+                            if 'tcp' in self.interface_mode:
+                                callback(
+                                    frame.lstrip(
+                                        kiss.constants.DATA_FRAME).strip())
+                            elif 'serial' in self.interface_mode:
+                                callback(frame)
 
     def write(self, frame):
         """
-        Writes frame to KISS device.
+        Writes frame to KISS interface.
 
         :param frame: Frame to write.
         """
+        interface_handler = None
 
-        if self.host:
-            return self.serial_int.send(''.join([
-                kiss.constants.FEND,
-                kiss.constants.DATA_FRAME,
-                kiss.util.escape_special_codes(frame),
-                kiss.constants.FEND
-            ]))
-        else:
-            return self.serial_int.write(''.join([
+        if 'tcp' in self.interface_mode:
+            interface_handler = self.interface.send
+        elif 'serial' in self.interface_mode:
+            interface_handler = self.interface.write
+
+        if interface_handler is not None:
+            return interface_handler(''.join([
                 kiss.constants.FEND,
                 kiss.constants.DATA_FRAME,
                 kiss.util.escape_special_codes(frame),

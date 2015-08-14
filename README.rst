@@ -21,6 +21,9 @@ Read & print frames from a TNC connected to '/dev/ttyUSB0' at 1200 baud::
     k.read(callback=print)
 
 
+See also: examples/ directory.
+
+
 Testing
 =======
 Run nosetests from a Makefile target::
@@ -51,14 +54,14 @@ https://github.com/ampledata/kiss
 
 Author
 ======
-Greg Albrecht W2GMD gba@onbeep.com
+Greg Albrecht W2GMD gba@orionlabs.co
 
 http://ampledata.org/
 
 
 Copyright
 =========
-Copyright 2013 OnBeep, Inc. and Contributors
+Copyright 2015 Orion Labs, Inc. and Contributors
 
 
 License

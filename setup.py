@@ -10,8 +10,8 @@ Source:: https://github.com/ampledata/kiss
 __title__ = 'kiss'
 __version__ = '2.0.2'
 __build__ = '0x020002'
-__author__ = 'Greg Albrecht W2GMD <gba@onbeep.com>'
-__copyright__ = 'Copyright 2013 OnBeep, Inc. and Contributors'
+__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.co>'
+__copyright__ = 'Copyright 2015 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -42,7 +42,7 @@ setup(
     description='KISS Python Module.',
     long_description=open('README.rst').read(),
     author='Greg Albrecht',
-    author_email='gba@onbeep.com',
+    author_email='gba@orionlabs.co',
     license=open('LICENSE').read(),
     url='https://github.com/ampledata/kiss',
     setup_requires=['nose'],
