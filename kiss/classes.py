@@ -109,13 +109,18 @@ class KISS(object):
             kiss.constants.FEND
         )
 
-    def read(self, callback=None):
+    def read(self, callback=None, readmode=True):
         """
         Reads data from KISS device.
 
         :param callback: Callback to call with decoded data.
+        :param readmode: If False, immediately returns frames.
+        :type callback: func
+        :type readmode: bool
+        :return: List of frames (if readmode=False).
+        :rtype: list
         """
-        self.logger.debug('callback=%s', callback)
+        self.logger.debug('callback=%s readmode=%s', callback, readmode)
 
         read_buffer = ''
 
@@ -161,17 +166,23 @@ class KISS(object):
                     if split_data[len_fend - 1]:
                         read_buffer = split_data[len_fend - 1]
 
-                # Loop through received frames
-                for frame in frames:
-                    if len(frame) and ord(frame[0]) == 0:
-                        self.logger.debug('frame=%s', frame)
-                        if callback:
-                            if 'tcp' in self.interface_mode:
-                                callback(
-                                    frame.lstrip(
-                                        kiss.constants.DATA_FRAME).strip())
-                            elif 'serial' in self.interface_mode:
-                                callback(frame)
+                if readmode:
+                    # Loop through received frames
+                    for frame in frames:
+                        if len(frame) and ord(frame[0]) == 0:
+                            self.logger.debug('frame=%s', frame)
+                            if callback:
+                                if 'tcp' in self.interface_mode:
+                                    callback(
+                                        frame.lstrip(
+                                            kiss.constants.DATA_FRAME).strip())
+                                elif 'serial' in self.interface_mode:
+                                    callback(frame)
+                elif not readmode:
+                    return frames
+
+            if not readmode:
+                return frames
 
     def write(self, frame):
         """
