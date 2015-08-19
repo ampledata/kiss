@@ -7,10 +7,19 @@
 #
 
 
-.DEFAULT_GOAL := init
+.DEFAULT_GOAL := all
 
 
-init: install_requirements develop
+all: install_requirements develop
+
+develop:
+	python setup.py develop
+
+install:
+	python setup.py install
+
+uninstall:
+	pip uninstall -y kiss
 
 install_requirements:
 	pip install -r requirements.txt
@@ -26,23 +35,14 @@ pep8: flake8
 clonedigger:
 	clonedigger --cpd-output .
 
-install:
-	pip install .
-
-uninstall:
-	pip uninstall kiss
-
-develop:
-	python setup.py develop
-
 publish:
 	python setup.py register sdist upload
 
 nosetests:
 	python setup.py nosetests
 
-test: init clonedigger nosetests lint flake8
+test: lint pep8 nosetests
 
 clean:
-	rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg nosetests.xml \
-		pylint.log *.egg output.xml flake8.log */*.pyc */*.pyo
+	@rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg
+	nosetests.xml pylint.log output.xml flake8.log */*.pyc */*.pyo

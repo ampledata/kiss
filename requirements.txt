@@ -6,10 +6,5 @@
 # License:: Apache License, Version 2.0
 
 
-flake8
-clonedigger
-coverage
-mock
-nose
-pylint
-pep8
+flake8==2.1.0
+pylint==1.2.1

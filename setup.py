@@ -45,9 +45,8 @@ setup(
     author_email='gba@orionlabs.co',
     license=open('LICENSE').read(),
     url='https://github.com/ampledata/kiss',
-    setup_requires=['nose'],
-    tests_require=['coverage', 'nose'],
-    install_requires=['pyserial'],
+    setup_requires=['coverage==3.7.1', 'nose==1.3.1'],
+    install_requires=['pyserial==2.7'],
     package_dir={'kiss': 'kiss'},
     packages=['kiss'],
     zip_safe=False

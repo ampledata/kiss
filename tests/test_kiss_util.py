@@ -43,6 +43,13 @@ class KISSUtilTestCase(unittest.TestCase):
         fesc = kiss.util.escape_special_codes(kiss.constants.FESC)
         self.assertEqual(fesc, kiss.constants.FESC_TFESC)
 
+    def test_extract_ui(self):
+        """
+        Tests `kiss.util.extract_ui` util function.
+        """
+        frame_ui = kiss.util.extract_ui(self.test_frame)
+        self.assertEqual('APRX240W2GMD 6WIDE1 1', frame_ui)
+
 
 if __name__ == '__main__':
     unittest.main()
