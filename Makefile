@@ -25,7 +25,7 @@ install_requirements:
 	pip install -r requirements.txt
 
 lint:
-	pylint -f colorized -r n kiss/*.py tests/*.py *.py
+	pylint -f colorized -r n kiss/*.py tests/*.py *.py || exit 0
 
 flake8:
 	flake8 --exit-zero  --max-complexity 12 kiss/*.py tests/*.py *.py
@@ -44,5 +44,5 @@ nosetests:
 test: lint pep8 nosetests
 
 clean:
-	@rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg
+	@rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg \
 	nosetests.xml pylint.log output.xml flake8.log */*.pyc */*.pyo
