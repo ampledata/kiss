@@ -78,14 +78,17 @@ class KISS(object):
             self.interface = serial.Serial(self.port, self.speed)
             self.interface.timeout = kiss.constants.SERIAL_TIMEOUT
 
-        # If no settings specified, default to config values similar
-        # to those that ship with Xastir.
-        if not kwargs:
-            kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
-
-        if 'serial' in self.interface_mode:
+        # Previous verious defaulted to Xastir-friendly configs. Unfortunately
+        # those don't work with Bluetooth TNCs, so we're reverting to None.
+        if 'serial' in self.interface_mode and kwargs:
             for name, value in kwargs.items():
                 self.write_setting(name, value)
+
+        # If no settings specified, default to config values similar
+        # to those that ship with Xastir.
+        #if not kwargs:
+        #    kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
+
 
     def write_setting(self, name, value):
         """
