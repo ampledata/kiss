@@ -30,13 +30,15 @@ class KISS(object):
     logger.addHandler(console_handler)
     logger.propagate = False
 
-    def __init__(self, port=None, speed=None, host=None, tcp_port=None):
+    def __init__(self, port=None, speed=None, host=None, tcp_port=None,
+                 strip_df_start=False):
         self.port = port
         self.speed = speed
         self.host = host
         self.tcp_port = tcp_port
         self.interface = None
         self.interface_mode = None
+        self.strip_df_start = strip_df_start
 
         if self.port is not None and self.speed is not None:
             self.interface_mode = 'serial'
@@ -176,16 +178,28 @@ class KISS(object):
                             self.logger.debug('frame=%s', frame)
                             if callback:
                                 if 'tcp' in self.interface_mode:
-                                    callback(
-                                        frame.lstrip(
-                                            kiss.constants.DATA_FRAME).strip())
+                                    if self.strip_df_start:
+                                        callback(
+                                            kiss.util.strip_df_start(frame))
+                                    else:
+                                        callback(frame)
                                 elif 'serial' in self.interface_mode:
-                                    callback(frame)
+                                    if self.strip_df_start:
+                                        callback(
+                                            kiss.util.strip_df_start(frame))
+                                    else:
+                                        callback(frame)
                 elif not readmode:
-                    return frames
+                    if self.strip_df_start:
+                        return [kiss.util.strip_df_start(f) for f in frames]
+                    else:
+                        return frames
 
             if not readmode:
-                return frames
+                    if self.strip_df_start:
+                        return [kiss.util.strip_df_start(f) for f in frames]
+                    else:
+                        return frames
 
     def write(self, frame):
         """

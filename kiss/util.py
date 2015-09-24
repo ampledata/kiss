@@ -42,3 +42,15 @@ def extract_ui(frame):
         ''.join([kiss.constants.FEND, kiss.constants.DATA_FRAME]))
     end_ui = start_ui[0].split(''.join([kiss.constants.SLOT_TIME, chr(0xF0)]))
     return ''.join([chr(ord(x) >> 1) for x in end_ui[0]])
+
+
+def strip_df_start(frame):
+    """
+    Strips KISS DATA_FRAME start (0x00) and newline from frame.
+
+    :param frame: APRS/AX.25 frame.
+    :type frame: str
+    :returns: APRS/AX.25 frame sans DATA_FRAME start (0x00).
+    :rtype: str
+    """
+    return frame.lstrip(kiss.constants.DATA_FRAME).strip()
