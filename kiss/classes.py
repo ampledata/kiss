@@ -175,6 +175,7 @@ class KISS(object):
                     # Loop through received frames
                     for frame in frames:
                         if len(frame) and ord(frame[0]) == 0:
+                            frame = kiss.util.recover_special_codes(frame)
                             self.logger.debug('frame=%s', frame)
                             if callback:
                                 if 'tcp' in self.interface_mode:
@@ -191,15 +192,15 @@ class KISS(object):
                                         callback(frame)
                 elif not readmode:
                     if self.strip_df_start:
-                        return [kiss.util.strip_df_start(f) for f in frames]
+                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
                     else:
-                        return frames
+                        return [kiss.util.recover_special_codes(f) for f in frames]
 
             if not readmode:
                     if self.strip_df_start:
-                        return [kiss.util.strip_df_start(f) for f in frames]
+                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
                     else:
-                        return frames
+                        return [kiss.util.recover_special_codes(f) for f in frames]
 
     def write(self, frame):
         """
