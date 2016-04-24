@@ -28,6 +28,22 @@ def escape_special_codes(raw_codes):
         kiss.constants.FESC_TFEND
     )
 
+def recover_special_codes(escaped_codes):
+    """
+    Recover special codes, per KISS spec.
+
+    "If the FESC_TFESC or FESC_TFEND escaped codes appear in the data received, they
+    need to be recovered to the original codes. The FESC_TFESC code is replaced by
+    FESC code and FESC_TFEND is replaced by FEND code."
+    - http://en.wikipedia.org/wiki/KISS_(TNC)#Description
+    """
+    return escaped_codes.replace(
+        kiss.constants.FESC_TFESC,
+        kiss.constants.FESC
+    ).replace(
+        kiss.constants.FESC_TFEND,
+        kiss.constants.FEND
+    )
 
 def extract_ui(frame):
     """
