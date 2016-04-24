@@ -53,14 +53,14 @@ https://github.com/ampledata/kiss
 
 Author
 ======
-Greg Albrecht W2GMD gba@orionlabs.co
+Greg Albrecht W2GMD gba@orionlabs.io
 
 http://ampledata.org/
 
 
 Copyright
 =========
-Copyright 2015 Orion Labs, Inc. and Contributors
+Copyright 2016 Orion Labs, Inc. and Contributors
 
 
 License
