@@ -1,10 +1,10 @@
 # Python Distribution Package Requirements for KISS.
 #
 # Source:: https://github.com/ampledata/kiss
-# Author:: Greg Albrecht W2GMD <gba@orionlabs.co>
-# Copyright:: Copyright 2015 Orion Labs, Inc. and Contributors
+# Author:: Greg Albrecht W2GMD <gba@orionlabs.io>
+# Copyright:: Copyright 2016 Orion Labs, Inc. and Contributors
 # License:: Apache License, Version 2.0
 
 
-flake8==2.1.0
-pylint==1.2.1
+flake8
+pylint

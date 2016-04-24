@@ -1,5 +1,8 @@
-script: 'make nosetests'
+language: python
+
 python:
   - "2.7"
-  - "2.6"
-  - "3.2"
+
+install: make
+
+script: make nosetests

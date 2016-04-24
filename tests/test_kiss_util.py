@@ -3,11 +3,12 @@
 
 """Tests for KISS Util Module."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.co>'
-__copyright__ = 'Copyright 2015 Orion Labs, Inc. and Contributors'
+__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
+__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
+import logging
 import unittest
 
 from .context import kiss
@@ -19,6 +20,15 @@ from . import constants
 class KISSUtilTestCase(unittest.TestCase):
 
     """Test class for KISS Python Module."""
+
+    _logger = logging.getLogger(__name__)
+    if not _logger.handlers:
+        _logger.setLevel(kiss.constants.LOG_LEVEL)
+        _console_handler = logging.StreamHandler()
+        _console_handler.setLevel(kiss.constants.LOG_LEVEL)
+        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
+        _logger.addHandler(_console_handler)
+        _logger.propagate = False
 
     def setUp(self):
         """Setup."""

@@ -3,8 +3,8 @@
 
 """Utilities for the KISS Python Module."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.co>'
-__copyright__ = 'Copyright 2015 Orion Labs, Inc. and Contributors'
+__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
+__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -26,6 +26,24 @@ def escape_special_codes(raw_codes):
     ).replace(
         kiss.constants.FEND,
         kiss.constants.FESC_TFEND
+    )
+
+
+def recover_special_codes(escaped_codes):
+    """
+    Recover special codes, per KISS spec.
+
+    "If the FESC_TFESC or FESC_TFEND escaped codes appear in the data received, they
+    need to be recovered to the original codes. The FESC_TFESC code is replaced by
+    FESC code and FESC_TFEND is replaced by FEND code."
+    - http://en.wikipedia.org/wiki/KISS_(TNC)#Description
+    """
+    return escaped_codes.replace(
+        kiss.constants.FESC_TFESC,
+        kiss.constants.FESC
+    ).replace(
+        kiss.constants.FESC_TFEND,
+        kiss.constants.FEND
     )
 
 
