@@ -15,25 +15,19 @@ all: install_requirements develop
 develop:
 	python setup.py develop
 
+install_requirements:
+	pip install -r requirements.txt
+
 install:
 	python setup.py install
 
 uninstall:
 	pip uninstall -y kiss
 
-install_requirements:
-	pip install -r requirements.txt
-
-lint:
-	pylint -f colorized -r n kiss/*.py tests/*.py *.py || exit 0
-
-flake8:
-	flake8 --exit-zero  --max-complexity 12 kiss/*.py tests/*.py *.py
-
-pep8: flake8
-
-clonedigger:
-	clonedigger --cpd-output .
+clean:
+	@rm -rf *.egg* build dist *.py[oc] */*.py[co] cover doctest_pypi.cfg \
+		nosetests.xml pylint.log output.xml flake8.log tests.log \
+		test-result.xml htmlcov fab.log .coverage
 
 publish:
 	python setup.py register sdist upload
@@ -41,8 +35,11 @@ publish:
 nosetests:
 	python setup.py nosetests
 
-test: lint pep8 nosetests
+pep8: install_requirements
+	flake8 --max-complexity 12 --exit-zero kiss/*.py tests/*.py
 
-clean:
-	@rm -rf *.egg* build dist *.pyc *.pyo cover doctest_pypi.cfg \
-	nosetests.xml pylint.log output.xml flake8.log */*.pyc */*.pyo
+lint: install_requirements
+	pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" \
+		-r n kiss/*.py tests/*.py || exit 0
+
+test: lint pep8 nosetests

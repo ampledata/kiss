@@ -15,14 +15,8 @@ __license__ = 'Apache License, Version 2.0'
 
 
 import os
+import setuptools
 import sys
-
-
-try:
-    from setuptools import setup
-except ImportError:
-    # pylint: disable=F0401,E0611
-    from distutils.core import setup
 
 
 def publish():
@@ -35,7 +29,7 @@ def publish():
 publish()
 
 
-setup(
+setuptools.setup(
     name=__title__,
     version=__version__,
     description='KISS Python Module.',

@@ -28,6 +28,7 @@ def escape_special_codes(raw_codes):
         kiss.constants.FESC_TFEND
     )
 
+
 def recover_special_codes(escaped_codes):
     """
     Recover special codes, per KISS spec.
@@ -44,6 +45,7 @@ def recover_special_codes(escaped_codes):
         kiss.constants.FESC_TFEND,
         kiss.constants.FEND
     )
+
 
 def extract_ui(frame):
     """
