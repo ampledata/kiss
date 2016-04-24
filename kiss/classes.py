@@ -3,8 +3,8 @@
 
 """KISS Core Classes."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.co>'
-__copyright__ = 'Copyright 2015 Orion Labs, Inc. and Contributors'
+__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
+__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -21,14 +21,14 @@ class KISS(object):
 
     """KISS Object Class."""
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(kiss.constants.LOG_LEVEL)
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(kiss.constants.LOG_LEVEL)
-    formatter = logging.Formatter(kiss.constants.LOG_FORMAT)
-    console_handler.setFormatter(formatter)
-    logger.addHandler(console_handler)
-    logger.propagate = False
+    _logger = logging.getLogger(__name__)
+    if not _logger.handlers:
+        _logger.setLevel(kiss.constants.LOG_LEVEL)
+        _console_handler = logging.StreamHandler()
+        _console_handler.setLevel(kiss.constants.LOG_LEVEL)
+        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
+        _logger.addHandler(_console_handler)
+        _logger.propagate = False
 
     def __init__(self, port=None, speed=None, host=None, tcp_port=None,
                  strip_df_start=False):
@@ -47,7 +47,7 @@ class KISS(object):
         if self.interface_mode is None:
             raise Exception('Must set port/speed or host/tcp_port.')
 
-        self.logger.info('Using interface_mode=%s', self.interface_mode)
+        self._logger.info('Using interface_mode=%s', self.interface_mode)
 
     def __enter__(self):
         return self
@@ -71,7 +71,7 @@ class KISS(object):
 
         :param **kwargs: name/value pairs to use as initial config values.
         """
-        self.logger.debug("kwargs=%s", kwargs)
+        self._logger.debug("kwargs=%s", kwargs)
 
         if 'tcp' in self.interface_mode:
             address = (self.host, self.tcp_port)
@@ -101,7 +101,7 @@ class KISS(object):
         :param name: KISS Command Code Name as a string.
         :param value: KISS Command Code Value to write.
         """
-        self.logger.debug('Configuring %s = %s', name, repr(value))
+        self._logger.debug('Configuring %s = %s', name, repr(value))
 
         # Do the reasonable thing if a user passes an int
         if isinstance(value, int):
@@ -125,7 +125,7 @@ class KISS(object):
         :return: List of frames (if readmode=False).
         :rtype: list
         """
-        self.logger.debug('callback=%s readmode=%s', callback, readmode)
+        self._logger.debug('callback=%s readmode=%s', callback, readmode)
 
         read_buffer = ''
 
@@ -145,7 +145,7 @@ class KISS(object):
 
                 split_data = read_data.split(kiss.constants.FEND)
                 len_fend = len(split_data)
-                self.logger.debug('len_fend=%s', len_fend)
+                self._logger.debug('len_fend=%s', len_fend)
 
                 # No FEND in frame
                 if len_fend == 1:
@@ -175,7 +175,8 @@ class KISS(object):
                     # Loop through received frames
                     for frame in frames:
                         if len(frame) and ord(frame[0]) == 0:
-                            self.logger.debug('frame=%s', frame)
+                            frame = kiss.util.recover_special_codes(frame)
+                            self._logger.debug('frame=%s', frame)
                             if callback:
                                 if 'tcp' in self.interface_mode:
                                     if self.strip_df_start:
@@ -191,15 +192,15 @@ class KISS(object):
                                         callback(frame)
                 elif not readmode:
                     if self.strip_df_start:
-                        return [kiss.util.strip_df_start(f) for f in frames]
+                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
                     else:
-                        return frames
+                        return [kiss.util.recover_special_codes(f) for f in frames]
 
             if not readmode:
                     if self.strip_df_start:
-                        return [kiss.util.strip_df_start(f) for f in frames]
+                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
                     else:
-                        return frames
+                        return [kiss.util.recover_special_codes(f) for f in frames]
 
     def write(self, frame):
         """

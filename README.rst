@@ -1,8 +1,8 @@
 KISS Protocol implementation in Python
 **************************************
 
-A pure-Python implementation of the KISS Protocol for communicating with serial
-TNC devices for use with Amateur Radio.
+A pure-Python implementation of the KISS Protocol for communicating with
+serial TNC devices for use with Amateur Radio.
 
 Installation
 ============
@@ -46,6 +46,15 @@ Inspiration for this project came from:
 .. _Ham-APRS-FAP: http://search.cpan.org/dist/Ham-APRS-FAP/
 
 
+Build Status
+============
+
+Master:
+
+.. image:: https://travis-ci.org/ampledata/aprs.svg?branch=master
+    :target: https://travis-ci.org/ampledata/aprs
+
+
 Source
 ======
 https://github.com/ampledata/kiss
@@ -53,14 +62,14 @@ https://github.com/ampledata/kiss
 
 Author
 ======
-Greg Albrecht W2GMD gba@orionlabs.co
+Greg Albrecht W2GMD gba@orionlabs.io
 
 http://ampledata.org/
 
 
 Copyright
 =========
-Copyright 2015 Orion Labs, Inc. and Contributors
+Copyright 2016 Orion Labs, Inc. and Contributors
 
 
 License

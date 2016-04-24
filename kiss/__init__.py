@@ -8,15 +8,15 @@ KISS Python Module.
 ~~~~
 
 
-:author: Greg Albrecht W2GMD <gba@orionlabs.co>
-:copyright: Copyright 2015 Orion Labs, Inc. and Contributors
+:author: Greg Albrecht W2GMD <gba@orionlabs.io>
+:copyright: Copyright 2016 Orion Labs, Inc. and Contributors
 :license: Apache License, Version 2.0
 :source: <https://github.com/ampledata/kiss>
 
 """
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.co>'
-__copyright__ = 'Copyright 2015 Orion Labs, Inc. and Contributors'
+__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
+__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
