@@ -14,7 +14,7 @@ import logging
 def print_frame(frame):
     try:
         # Decode raw APRS frame into dictionary of separate sections
-        decoded_frame = aprs.util.decode_frame(frame)
+        decoded_frame = aprs.util.decode_frame(frame[1:])
 
         # Format the APRS frame (in Raw ASCII Text) as a human readable frame
         formatted_aprs = aprs.util.format_aprs_frame(decoded_frame)
@@ -30,7 +30,7 @@ def print_frame(frame):
 
 def main():
     ki = kiss.KISS(host='10.42.10.170', tcp_port=8001)
-    ki.logger.setLevel(logging.INFO)
+    ki._logger.setLevel(logging.INFO)
     ki.start()
     ki.read(callback=print_frame)
 
