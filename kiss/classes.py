@@ -26,7 +26,7 @@ class KISS(object):
         _logger.setLevel(kiss.constants.LOG_LEVEL)
         _console_handler = logging.StreamHandler()
         _console_handler.setLevel(kiss.constants.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
+        _console_handler.setFormatter(logging.Formatter(kiss.constants.LOG_FORMAT))
         _logger.addHandler(_console_handler)
         _logger.propagate = False
 
@@ -135,6 +135,9 @@ class KISS(object):
             read_data = None
             if 'tcp' in self.interface_mode:
                 read_data = self.interface.recv(kiss.constants.READ_BYTES)
+                if read_data == '':
+                    self._logger.warn('Socket closed')
+                    return None
             elif 'serial' in self.interface_mode:
                 read_data = self.interface.read(kiss.constants.READ_BYTES)
                 waiting_data = self.interface.inWaiting()
