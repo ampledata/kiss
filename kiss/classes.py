@@ -54,12 +54,14 @@ class KISS(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if 'tcp' in self.interface_mode:
-            self.interface.shutdown()
+            self.interface.shutdown(socket.SHUT_RDWR)
         elif self.interface and self.interface.isOpen():
             self.interface.close()
 
     def __del__(self):
-        if self.interface and self.interface.isOpen():
+        if 'tcp' in self.interface_mode:
+            self.interface.shutdown(socket.SHUT_RDWR)
+        elif self.interface and self.interface.isOpen():
             self.interface.close()
 
     def start(self, **kwargs):
