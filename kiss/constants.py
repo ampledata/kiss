@@ -13,7 +13,7 @@ import logging
 
 LOG_LEVEL = logging.DEBUG
 LOG_FORMAT = logging.Formatter(
-    '%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
+    '%(asctime)s kiss %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
     ' - %(message)s')
 
 SERIAL_TIMEOUT = 0.01

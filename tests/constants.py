@@ -9,3 +9,8 @@ __license__ = 'Apache License, Version 2.0'
 
 
 TEST_FRAMES = 'tests/test_frames.log'
+
+ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+NUMBERS = '0123456789'
+POSITIVE_NUMBERS = NUMBERS[1:]
+ALPHANUM = ''.join([ALPHABET, NUMBERS])

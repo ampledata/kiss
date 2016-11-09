@@ -8,7 +8,7 @@ Source:: https://github.com/ampledata/kiss
 """
 
 __title__ = 'kiss'
-__version__ = '3.4.0'
+__version__ = '4.0.0b1'
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
@@ -38,7 +38,11 @@ setuptools.setup(
     author_email='oss@undef.net',
     license=open('LICENSE').read(),
     url='https://github.com/ampledata/kiss',
-    setup_requires=['coverage >= 3.7.1', 'nose >= 1.3.7'],
+    setup_requires=[
+        'coverage >= 3.7.1',
+        'nose >= 1.3.7',
+        'dummyserial'
+    ],
     install_requires=['pyserial >= 2.7'],
     package_dir={'kiss': 'kiss'},
     packages=['kiss'],
