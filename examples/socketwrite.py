@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Reads & Prints KISS frames from a Serial console.
+Reads & Prints KISS frames from a TCP Socket.
 
 For use with programs like Dire Wolf.
 """
@@ -12,7 +12,7 @@ import logging
 
 
 def main():
-    ki = aprs.APRSKISS(port='/dev/cu.AP510-DevB', speed='9600')
+    ki = aprs.APRSKISS(host='localhost', tcp_port=6666)
     ki._logger.setLevel(logging.DEBUG)
     ki.start()
     frame = {

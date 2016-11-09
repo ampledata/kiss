@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Reads & Prints KISS frames from a TCP Socket.
+Reads & Prints KISS frames from a Serial console.
 
 For use with programs like Dire Wolf.
 """
@@ -30,7 +30,7 @@ def print_frame(frame):
 
 def main():
     ki = kiss.KISS(port='/dev/cu.AP510-DevB', speed='9600')
-    ki.logger.setLevel(logging.INFO)
+    ki._logger.setLevel(logging.INFO)
     ki.start()
     ki.read(callback=print_frame)
 
