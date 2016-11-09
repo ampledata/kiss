@@ -29,7 +29,7 @@ def print_frame(frame):
 
 
 def main():
-    ki = kiss.KISS(port='/dev/cu.AP510-DevB', speed='9600')
+    ki = kiss.SerialKISS(port='/dev/cu.AP510-DevB', speed='9600')
     ki._logger.setLevel(logging.INFO)
     ki.start()
     ki.read(callback=print_frame)

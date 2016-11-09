@@ -29,7 +29,7 @@ def print_frame(frame):
 
 
 def main():
-    ki = kiss.KISS(host='10.42.10.170', tcp_port=8001)
+    ki = kiss.TCPKISS(host='10.42.10.170', port=8001)
     ki._logger.setLevel(logging.INFO)
     ki.start()
     ki.read(callback=print_frame)

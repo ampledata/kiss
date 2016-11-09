@@ -12,7 +12,7 @@ import logging
 
 
 def main():
-    ki = aprs.APRSKISS(port='/dev/cu.AP510-DevB', speed='9600')
+    ki = aprs.SerialKISS(port='/dev/cu.AP510-DevB', speed='9600')
     ki._logger.setLevel(logging.DEBUG)
     ki.start()
     frame = {
@@ -21,7 +21,7 @@ def main():
         'path': 'WIDE1-1',
         'text': '`25mfs>/"3x}'
     }
-    ki.write(frame)
+    ki.write(aprs.util.encode_frame(frame))
 
 
 if __name__ == '__main__':

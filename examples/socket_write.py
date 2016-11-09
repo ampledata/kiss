@@ -12,7 +12,7 @@ import logging
 
 
 def main():
-    ki = aprs.APRSKISS(host='localhost', tcp_port=6666)
+    ki = kiss.TCPKISS(host='localhost', port=1234)
     ki._logger.setLevel(logging.DEBUG)
     ki.start()
     frame = {
@@ -21,7 +21,7 @@ def main():
         'path': 'WIDE1-1',
         'text': '`25mfs>/"3x}'
     }
-    ki.write(frame)
+    ki.write(aprs.util.encode_frame(frame))
 
 
 if __name__ == '__main__':

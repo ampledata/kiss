@@ -282,3 +282,16 @@ class SerialKISS(KISS):
         self.interface.timeout = kiss.constants.SERIAL_TIMEOUT
         self._write_handler = self.interface.write
         self._write_defaults(kwargs)
+
+
+class APRSKISS(kiss.KISS):
+
+    """APRS interface for KISS serial devices."""
+
+    def write(self, frame):
+        """Writes APRS-encoded frame to KISS device.
+        :param frame: APRS frame to write to KISS device.
+        :type frame: str
+        """
+        encoded_frame = aprs.util.encode_frame(frame)
+        super(APRSKISS, self).write(encoded_frame)
