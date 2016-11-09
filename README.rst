@@ -62,7 +62,7 @@ https://github.com/ampledata/kiss
 
 Author
 ======
-Greg Albrecht W2GMD gba@orionlabs.io
+Greg Albrecht W2GMD oss@undef.net
 
 http://ampledata.org/
 
