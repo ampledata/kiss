@@ -3,18 +3,16 @@
 
 """KISS Core Classes."""
 
+import logging
+import socket
+
+import serial
+
+import kiss.constants
+
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
-
-
-import logging
-
-import serial
-import socket
-
-import kiss.constants
-import kiss.util
 
 
 class KISS(object):
@@ -26,7 +24,7 @@ class KISS(object):
         _logger.setLevel(kiss.constants.LOG_LEVEL)
         _console_handler = logging.StreamHandler()
         _console_handler.setLevel(kiss.constants.LOG_LEVEL)
-        _console_handler.setFormatter(logging.Formatter(kiss.constants.LOG_FORMAT))
+        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
         _logger.addHandler(_console_handler)
         _logger.propagate = False
 
@@ -88,11 +86,10 @@ class KISS(object):
             for name, value in kwargs.items():
                 self.write_setting(name, value)
 
-        # If no settings specified, default to config values similar
-        # to those that ship with Xastir.
-        #if not kwargs:
+        #  If no settings specified, default to config values similar
+        #  to those that ship with Xastir.
+        # if not kwargs:
         #    kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
-
 
     def write_setting(self, name, value):
         """
@@ -112,7 +109,7 @@ class KISS(object):
         return self.interface.write(
             kiss.constants.FEND +
             getattr(kiss.constants, name.upper()) +
-            kiss.util.escape_special_codes(value) +
+            kiss.escape_special_codes(value) +
             kiss.constants.FEND
         )
 
@@ -180,32 +177,32 @@ class KISS(object):
                     # Loop through received frames
                     for frame in frames:
                         if len(frame) and ord(frame[0]) == 0:
-                            frame = kiss.util.recover_special_codes(frame)
+                            frame = kiss.recover_special_codes(frame)
                             self._logger.debug('frame=%s', frame)
                             if callback:
                                 if 'tcp' in self.interface_mode:
                                     if self.strip_df_start:
                                         callback(
-                                            kiss.util.strip_df_start(frame))
+                                            kiss.strip_df_start(frame))
                                     else:
                                         callback(frame)
                                 elif 'serial' in self.interface_mode:
                                     if self.strip_df_start:
                                         callback(
-                                            kiss.util.strip_df_start(frame))
+                                            kiss.strip_df_start(frame))
                                     else:
                                         callback(frame)
                 elif not readmode:
                     if self.strip_df_start:
-                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
+                        return [kiss.strip_df_start(kiss.recover_special_codes(f)) for f in frames]  # NOQA pylint: disable=line-too-long
                     else:
-                        return [kiss.util.recover_special_codes(f) for f in frames]
+                        return [kiss.recover_special_codes(f) for f in frames]
 
             if not readmode:
-                    if self.strip_df_start:
-                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
-                    else:
-                        return [kiss.util.recover_special_codes(f) for f in frames]
+                if self.strip_df_start:
+                    return [kiss.strip_df_start(kiss.recover_special_codes(f)) for f in frames]  # NOQA pylint: disable=line-too-long
+                else:
+                    return [kiss.recover_special_codes(f) for f in frames]
 
     def write(self, frame):
         """
@@ -224,6 +221,6 @@ class KISS(object):
             return interface_handler(''.join([
                 kiss.constants.FEND,
                 kiss.constants.DATA_FRAME,
-                kiss.util.escape_special_codes(frame),
+                kiss.escape_special_codes(frame),
                 kiss.constants.FEND
             ]))

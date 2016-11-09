@@ -12,8 +12,9 @@ import logging
 
 
 LOG_LEVEL = logging.DEBUG
-LOG_FORMAT = ('%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
-              ' - %(message)s')
+LOG_FORMAT = logging.Formatter(
+    '%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
+    ' - %(message)s')
 
 SERIAL_TIMEOUT = 0.01
 READ_BYTES = 1000
@@ -58,4 +59,4 @@ DEFAULT_KISS_CONFIG_VALUES = {
     'SLOT_TIME': 20,
     'TX_TAIL': 30,
     'FULL_DUPLEX': 0,
-    }
+}
