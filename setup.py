@@ -8,7 +8,7 @@ Source:: https://github.com/ampledata/kiss
 """
 
 __title__ = 'kiss'
-__version__ = '3.2.0'
+__version__ = '3.3.0'
 __author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
