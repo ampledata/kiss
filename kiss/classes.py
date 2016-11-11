@@ -106,18 +106,19 @@ class KISS(object):
 
         while 1:
             read_data = self._read_handler(read_bytes)
-            self._logger.debug('read_data(%s)="%s"', len(read_data), read_data)
 
-            if read_data is not None:
+            if read_data is not None and len(read_data):
+                self._logger.debug(
+                    'read_data(%s)="%s"', len(read_data), read_data)
+
                 frames = []
 
                 # TEST
-                # split_data = filter(None, read_data.split(kiss.constants.FEND))
+                #split_data = filter(None, read_data.split(kiss.constants.FEND))
                 split_data = read_data.split(kiss.constants.FEND)
                 len_fend = len(split_data)
                 self._logger.debug(
-                    'split_data(%s)="%s"', len_fend, split_data)
-                self._logger.debug('len_fend=%s', len_fend)
+                    'split_data(len_fend=%s)="%s"', len_fend, split_data)
 
                 # No FEND in frame
                 if len_fend == 1:
@@ -239,10 +240,12 @@ class SerialKISS(KISS):
     def _read_handler(self, read_bytes=None):
         read_bytes = read_bytes or kiss.constants.READ_BYTES
         read_data = self.interface.read(read_bytes)
-        self._logger.debug('read_data="%s"', read_data)
+        if len(read_data):
+            self._logger.debug(
+                'read_data(%s)="%s"', len(read_data), read_data)
         waiting_data = self.interface.inWaiting()
-        self._logger.debug('waiting_data="%s"', waiting_data)
         if waiting_data:
+            self._logger.debug('waiting_data="%s"',waiting_data)
             read_data = ''.join([
                 read_data, self.interface.read(waiting_data)])
         return read_data
@@ -281,17 +284,4 @@ class SerialKISS(KISS):
         self.interface = serial.Serial(self.port, self.speed)
         self.interface.timeout = kiss.constants.SERIAL_TIMEOUT
         self._write_handler = self.interface.write
-        self._write_defaults(kwargs)
-
-
-class APRSKISS(kiss.KISS):
-
-    """APRS interface for KISS serial devices."""
-
-    def write(self, frame):
-        """Writes APRS-encoded frame to KISS device.
-        :param frame: APRS frame to write to KISS device.
-        :type frame: str
-        """
-        encoded_frame = aprs.util.encode_frame(frame)
-        super(APRSKISS, self).write(encoded_frame)
+        self._write_defaults(**kwargs)

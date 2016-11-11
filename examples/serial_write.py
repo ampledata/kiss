@@ -12,8 +12,8 @@ import logging
 
 
 def main():
-    ki = aprs.SerialKISS(port='/dev/cu.AP510-DevB', speed='9600')
-    ki._logger.setLevel(logging.DEBUG)
+    ki = kiss.SerialKISS(port='/dev/cu.AP510-DevB', speed='9600')
+    #ki._logger.setLevel(logging.DEBUG)
     ki.start()
     frame = {
         'source': 'W2GMD-14',
