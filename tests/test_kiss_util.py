@@ -3,7 +3,7 @@
 
 """Tests for KISS Util Module."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
@@ -41,23 +41,26 @@ class KISSUtilTestCase(unittest.TestCase):
 
     def test_escape_special_codes_fend(self):
         """
-        Tests `kiss.util.escape_special_codes` util function.
+        Tests `kiss.escape_special_codes` util function.
         """
-        fend = kiss.util.escape_special_codes(kiss.constants.FEND)
+        fend = kiss.escape_special_codes(kiss.constants.FEND)
+        self._logger.debug('fend=%s', fend)
         self.assertEqual(fend, kiss.constants.FESC_TFEND)
 
     def test_escape_special_codes_fesc(self):
         """
-        Tests `kiss.util.escape_special_codes` util function.
+        Tests `kiss.escape_special_codes` util function.
         """
-        fesc = kiss.util.escape_special_codes(kiss.constants.FESC)
+        fesc = kiss.escape_special_codes(kiss.constants.FESC)
+        self._logger.debug('fesc=%s', fesc)
         self.assertEqual(fesc, kiss.constants.FESC_TFESC)
 
     def test_extract_ui(self):
         """
-        Tests `kiss.util.extract_ui` util function.
+        Tests `kiss.extract_ui` util function.
         """
-        frame_ui = kiss.util.extract_ui(self.test_frame)
+        frame_ui = kiss.extract_ui(self.test_frame)
+        self._logger.debug('frame_ui=%s', frame_ui)
         self.assertEqual('APRX240W2GMD 6WIDE1 1', frame_ui)
 
 

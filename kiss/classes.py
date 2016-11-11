@@ -3,18 +3,16 @@
 
 """KISS Core Classes."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
-__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
-__license__ = 'Apache License, Version 2.0'
-
-
 import logging
-
-import serial
 import socket
 
+import serial
+
 import kiss.constants
-import kiss.util
+
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
+__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
+__license__ = 'Apache License, Version 2.0'
 
 
 class KISS(object):
@@ -26,73 +24,47 @@ class KISS(object):
         _logger.setLevel(kiss.constants.LOG_LEVEL)
         _console_handler = logging.StreamHandler()
         _console_handler.setLevel(kiss.constants.LOG_LEVEL)
-        _console_handler.setFormatter(logging.Formatter(kiss.constants.LOG_FORMAT))
+        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
         _logger.addHandler(_console_handler)
         _logger.propagate = False
 
-    def __init__(self, port=None, speed=None, host=None, tcp_port=None,
-                 strip_df_start=False):
-        self.port = port
-        self.speed = speed
-        self.host = host
-        self.tcp_port = tcp_port
-        self.interface = None
-        self.interface_mode = None
+    def __init__(self, strip_df_start=False):
         self.strip_df_start = strip_df_start
-
-        if self.port is not None and self.speed is not None:
-            self.interface_mode = 'serial'
-        elif self.host is not None and self.tcp_port is not None:
-            self.interface_mode = 'tcp'
-        if self.interface_mode is None:
-            raise Exception('Must set port/speed or host/tcp_port.')
-
-        self._logger.info('Using interface_mode=%s', self.interface_mode)
+        self.interface = None
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if 'tcp' in self.interface_mode:
-            self.interface.shutdown(socket.SHUT_RDWR)
-        elif self.interface and self.interface.isOpen():
-            self.interface.close()
+        self.stop()
 
     def __del__(self):
-        if 'tcp' in self.interface_mode:
-            self.interface.shutdown(socket.SHUT_RDWR)
-        elif self.interface and self.interface.isOpen():
-            self.interface.close()
+        self.stop()
+
+    def _read_handler(self):
+        """
+        Helper method to call when reading from KISS interface.
+        """
+        pass
+
+    def _write_handler(self, frame=None):
+        """
+        Helper method to call when writing to KISS interface.
+        """
+        del frame
+        pass
+
+    def stop(self):
+        """
+        Helper method to call when stopping KISS interface.
+        """
+        pass
 
     def start(self, **kwargs):
         """
-        Initializes the KISS device and commits configuration.
-
-        See http://en.wikipedia.org/wiki/KISS_(TNC)#Command_codes
-        for configuration names.
-
-        :param **kwargs: name/value pairs to use as initial config values.
+        Helper method to call when starting KISS interface.
         """
-        self._logger.debug("kwargs=%s", kwargs)
-
-        if 'tcp' in self.interface_mode:
-            address = (self.host, self.tcp_port)
-            self.interface = socket.create_connection(address)
-        elif 'serial' in self.interface_mode:
-            self.interface = serial.Serial(self.port, self.speed)
-            self.interface.timeout = kiss.constants.SERIAL_TIMEOUT
-
-        # Previous verious defaulted to Xastir-friendly configs. Unfortunately
-        # those don't work with Bluetooth TNCs, so we're reverting to None.
-        if 'serial' in self.interface_mode and kwargs:
-            for name, value in kwargs.items():
-                self.write_setting(name, value)
-
-        # If no settings specified, default to config values similar
-        # to those that ship with Xastir.
-        #if not kwargs:
-        #    kwargs = kiss.constants.DEFAULT_KISS_CONFIG_VALUES
-
+        pass
 
     def write_setting(self, name, value):
         """
@@ -103,7 +75,7 @@ class KISS(object):
         :param name: KISS Command Code Name as a string.
         :param value: KISS Command Code Value to write.
         """
-        self._logger.debug('Configuring %s = %s', name, repr(value))
+        self._logger.debug('Configuring %s=%s', name, repr(value))
 
         # Do the reasonable thing if a user passes an int
         if isinstance(value, int):
@@ -112,11 +84,11 @@ class KISS(object):
         return self.interface.write(
             kiss.constants.FEND +
             getattr(kiss.constants, name.upper()) +
-            kiss.util.escape_special_codes(value) +
+            kiss.escape_special_codes(value) +
             kiss.constants.FEND
         )
 
-    def read(self, callback=None, readmode=True):
+    def read(self, read_bytes=None, callback=None, readmode=True):
         """
         Reads data from KISS device.
 
@@ -127,30 +99,26 @@ class KISS(object):
         :return: List of frames (if readmode=False).
         :rtype: list
         """
-        self._logger.debug('callback=%s readmode=%s', callback, readmode)
+        self._logger.debug(
+            'read_bytes=%s callback="%s" readmode=%s', read_bytes, callback, readmode)
 
         read_buffer = ''
 
         while 1:
-            read_data = None
-            if 'tcp' in self.interface_mode:
-                read_data = self.interface.recv(kiss.constants.READ_BYTES)
-                if read_data == '':
-                    self._logger.warn('Socket closed')
-                    return None
-            elif 'serial' in self.interface_mode:
-                read_data = self.interface.read(kiss.constants.READ_BYTES)
-                waiting_data = self.interface.inWaiting()
-                if waiting_data:
-                    read_data = ''.join([
-                        read_data, self.interface.read(waiting_data)])
+            read_data = self._read_handler(read_bytes)
 
-            if read_data is not None:
+            if read_data is not None and len(read_data):
+                self._logger.debug(
+                    'read_data(%s)="%s"', len(read_data), read_data)
+
                 frames = []
 
+                # TEST
+                #split_data = filter(None, read_data.split(kiss.constants.FEND))
                 split_data = read_data.split(kiss.constants.FEND)
                 len_fend = len(split_data)
-                self._logger.debug('len_fend=%s', len_fend)
+                self._logger.debug(
+                    'split_data(len_fend=%s)="%s"', len_fend, split_data)
 
                 # No FEND in frame
                 if len_fend == 1:
@@ -168,8 +136,12 @@ class KISS(object):
                         read_buffer = split_data[1]
                 # At least one complete frame received
                 elif len_fend >= 3:
+                    # Iterate through split_data and extract just the frames.
+                    # FIXME: try filter
+                    # self._logger.debug('filter="%s"', filter(None, split_data))
                     for i in range(0, len_fend - 1):
                         _str = ''.join([read_buffer, split_data[i]])
+                        self._logger.debug('_str="%s"', _str)
                         if _str:
                             frames.append(_str)
                             read_buffer = ''
@@ -180,32 +152,25 @@ class KISS(object):
                     # Loop through received frames
                     for frame in frames:
                         if len(frame) and ord(frame[0]) == 0:
-                            frame = kiss.util.recover_special_codes(frame)
+                            frame = kiss.recover_special_codes(frame)
                             self._logger.debug('frame=%s', frame)
                             if callback:
-                                if 'tcp' in self.interface_mode:
-                                    if self.strip_df_start:
-                                        callback(
-                                            kiss.util.strip_df_start(frame))
-                                    else:
-                                        callback(frame)
-                                elif 'serial' in self.interface_mode:
-                                    if self.strip_df_start:
-                                        callback(
-                                            kiss.util.strip_df_start(frame))
-                                    else:
-                                        callback(frame)
+                                if self.strip_df_start:
+                                    callback(
+                                        kiss.strip_df_start(frame))
+                                else:
+                                    callback(frame)
                 elif not readmode:
                     if self.strip_df_start:
-                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
+                        return [kiss.strip_df_start(kiss.recover_special_codes(f)) for f in frames]  # NOQA pylint: disable=line-too-long
                     else:
-                        return [kiss.util.recover_special_codes(f) for f in frames]
+                        return [kiss.recover_special_codes(f) for f in frames]
 
             if not readmode:
-                    if self.strip_df_start:
-                        return [kiss.util.strip_df_start(kiss.util.recover_special_codes(f)) for f in frames]
-                    else:
-                        return [kiss.util.recover_special_codes(f) for f in frames]
+                if self.strip_df_start:
+                    return [kiss.strip_df_start(kiss.recover_special_codes(f)) for f in frames]  # NOQA pylint: disable=line-too-long
+                else:
+                    return [kiss.recover_special_codes(f) for f in frames]
 
     def write(self, frame):
         """
@@ -213,17 +178,110 @@ class KISS(object):
 
         :param frame: Frame to write.
         """
-        interface_handler = None
+        self._logger.debug('frame(%s)="%s"', len(frame), frame)
 
-        if 'tcp' in self.interface_mode:
-            interface_handler = self.interface.send
-        elif 'serial' in self.interface_mode:
-            interface_handler = self.interface.write
+        frame_escaped = kiss.escape_special_codes(frame)
+        self._logger.debug(
+            'frame_escaped(%s)="%s"', len(frame_escaped), frame_escaped)
 
-        if interface_handler is not None:
-            return interface_handler(''.join([
-                kiss.constants.FEND,
-                kiss.constants.DATA_FRAME,
-                kiss.util.escape_special_codes(frame),
-                kiss.constants.FEND
-            ]))
+        frame_kiss = ''.join([
+            kiss.constants.FEND,
+            kiss.constants.DATA_FRAME,
+            frame_escaped,
+            kiss.constants.FEND
+        ])
+        self._logger.debug(
+            'frame_kiss(%s)="%s"', len(frame_kiss), frame_kiss)
+
+        frame_write = self._write_handler(frame_kiss)
+
+
+class TCPKISS(KISS):
+
+    """KISS TCP Class."""
+
+    def __init__(self, host, port, strip_df_start=False):
+        self.host = host
+        self.port = port
+        self.strip_df_start = strip_df_start
+        super(TCPKISS, self).__init__(strip_df_start)
+
+    def _read_handler(self, read_bytes=None):
+        read_bytes = read_bytes or kiss.constants.READ_BYTES
+        read_data = self.interface.recv(read_bytes)
+        self._logger.debug('len(read_data)=%s', len(read_data))
+        if read_data == '':
+            self._logger.warn('Socket closed')
+            return
+        return read_data
+
+    def stop(self):
+        if self.interface:
+            self.interface.shutdown(socket.SHUT_RDWR)
+
+    def start(self):
+        """
+        Initializes the KISS device and commits configuration.
+        """
+        self.interface = socket.create_connection((self.host, self.port))
+        self._write_handler = self.interface.send
+
+
+class SerialKISS(KISS):
+
+    """KISS Serial Class."""
+
+    def __init__(self, port, speed, strip_df_start=False):
+        self.port = port
+        self.speed = speed
+        self.strip_df_start = strip_df_start
+        super(SerialKISS, self).__init__(strip_df_start)
+
+    def _read_handler(self, read_bytes=None):
+        read_bytes = read_bytes or kiss.constants.READ_BYTES
+        read_data = self.interface.read(read_bytes)
+        if len(read_data):
+            self._logger.debug(
+                'read_data(%s)="%s"', len(read_data), read_data)
+        waiting_data = self.interface.inWaiting()
+        if waiting_data:
+            self._logger.debug('waiting_data="%s"',waiting_data)
+            read_data = ''.join([
+                read_data, self.interface.read(waiting_data)])
+        return read_data
+
+    def _write_defaults(self, **kwargs):
+        """
+        Previous verious defaulted to Xastir-friendly configs. Unfortunately
+        those don't work with Bluetooth TNCs, so we're reverting to None.
+
+        Use `config_xastir()` for Xastir defaults.
+        """
+        return [self.write_setting(k, v) for k, v in kwargs.items()]
+
+    def config_xastir(self):
+        """
+        Helper method to set default configuration to those that ship with
+        Xastir.
+        """
+        return self._write_defaults(
+            **kiss.constants.DEFAULT_KISS_CONFIG_VALUES)
+
+    def stop(self):
+        if self.interface and self.interface.isOpen():
+            self.interface.close()
+
+    def start(self, **kwargs):
+        """
+        Initializes the KISS device and commits configuration.
+
+        See http://en.wikipedia.org/wiki/KISS_(TNC)#Command_codes
+        for configuration names.
+
+        :param **kwargs: name/value pairs to use as initial config values.
+        """
+        self._logger.debug('kwargs=%s', kwargs)
+        self.interface = serial.Serial(self.port, self.speed)
+        self.interface.timeout = kiss.constants.SERIAL_TIMEOUT
+        self._write_handler = self.interface.write
+        self._write_defaults(**kwargs)

@@ -15,9 +15,10 @@ Read & print frames from a TNC connected to '/dev/ttyUSB0' at 1200 baud::
 
     import kiss
 
-    k = kiss.KISS('/dev/ttyUSB0', 1200)
+    k = kiss.SerialKISS('/dev/ttyUSB0', 1200)
     k.start()  # inits the TNC, optionally passes KISS config flags.
-    k.read(callback=print)
+    def p(x): print(x) # prints whatever is passed in.
+    k.read(callback=p)  # reads frames and passes them to `p`.
 
 
 See also: examples/ directory.
@@ -54,6 +55,11 @@ Master:
 .. image:: https://travis-ci.org/ampledata/aprs.svg?branch=master
     :target: https://travis-ci.org/ampledata/aprs
 
+Develop:
+
+.. image:: https://travis-ci.org/ampledata/aprs.svg?branch=develop
+    :target: https://travis-ci.org/ampledata/aprs
+
 
 Source
 ======
@@ -62,7 +68,7 @@ https://github.com/ampledata/kiss
 
 Author
 ======
-Greg Albrecht W2GMD gba@orionlabs.io
+Greg Albrecht W2GMD oss@undef.net
 
 http://ampledata.org/
 

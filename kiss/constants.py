@@ -3,7 +3,7 @@
 
 """Constants for KISS Python Module."""
 
-__author__ = 'Greg Albrecht W2GMD <gba@orionlabs.io>'
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
@@ -12,8 +12,9 @@ import logging
 
 
 LOG_LEVEL = logging.DEBUG
-LOG_FORMAT = ('%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
-              ' - %(message)s')
+LOG_FORMAT = logging.Formatter(
+    '%(asctime)s kiss %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
+    ' - %(message)s')
 
 SERIAL_TIMEOUT = 0.01
 READ_BYTES = 1000
@@ -58,4 +59,4 @@ DEFAULT_KISS_CONFIG_VALUES = {
     'SLOT_TIME': 20,
     'TX_TAIL': 30,
     'FULL_DUPLEX': 0,
-    }
+}
