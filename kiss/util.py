@@ -70,4 +70,9 @@ def strip_df_start(frame):
     :returns: APRS/AX.25 frame sans DATA_FRAME start (0x00).
     :rtype: str
     """
-    return frame.lstrip(kiss.constants.DATA_FRAME).strip()
+    return frame.lstrip(kiss.DATA_FRAME).strip()
+
+
+def strip_nmea(frame):
+    if ord(frame[0]) == 240:
+        return frame[1:].rstrip()
