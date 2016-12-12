@@ -74,6 +74,9 @@ def strip_df_start(frame):
 
 
 def strip_nmea(frame):
+    """
+    Extracts NMEA header from T3-Micro or NMEA encoded KISS frames.
+    """
     if ord(frame[0]) == 240:
         return frame[1:].rstrip()
     else:

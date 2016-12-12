@@ -52,7 +52,6 @@ class KISS(object):
         Helper method to call when writing to KISS interface.
         """
         del frame
-        pass
 
     def stop(self):
         """
@@ -100,7 +99,8 @@ class KISS(object):
         :rtype: list
         """
         self._logger.debug(
-            'read_bytes=%s callback="%s" readmode=%s', read_bytes, callback, readmode)
+            'read_bytes=%s callback="%s" readmode=%s',
+            read_bytes, callback, readmode)
 
         read_buffer = ''
 
@@ -190,7 +190,7 @@ class KISS(object):
         self._logger.debug(
             'frame_kiss(%s)="%s"', len(frame_kiss), frame_kiss)
 
-        frame_write = self._write_handler(frame_kiss)
+        self._write_handler(frame_kiss)
 
 
 class TCPKISS(KISS):
@@ -242,7 +242,7 @@ class SerialKISS(KISS):
                 'read_data(%s)="%s"', len(read_data), read_data)
         waiting_data = self.interface.inWaiting()
         if waiting_data:
-            self._logger.debug('waiting_data="%s"',waiting_data)
+            self._logger.debug('waiting_data="%s"', waiting_data)
             read_data = ''.join([
                 read_data, self.interface.read(waiting_data)])
         return read_data

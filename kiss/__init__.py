@@ -23,7 +23,7 @@ from .constants import (LOG_FORMAT, LOG_LEVEL, SERIAL_TIMEOUT, READ_BYTES,  # NO
                         DEFAULT_KISS_CONFIG_VALUES, KISS_ON, KISS_OFF,
                         NMEA_HEADER)
 
-from .exceptions import SocketClosetError
+from .exceptions import SocketClosetError  # NOQA
 
 from .util import (escape_special_codes, recover_special_codes, extract_ui,  # NOQA
                    strip_df_start, strip_nmea)
