@@ -23,10 +23,10 @@ class KISSUtilTestCase(unittest.TestCase):
 
     _logger = logging.getLogger(__name__)
     if not _logger.handlers:
-        _logger.setLevel(kiss.constants.LOG_LEVEL)
+        _logger.setLevel(kiss.LOG_LEVEL)
         _console_handler = logging.StreamHandler()
-        _console_handler.setLevel(kiss.constants.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
+        _console_handler.setLevel(kiss.LOG_LEVEL)
+        _console_handler.setFormatter(kiss.LOG_FORMAT)
         _logger.addHandler(_console_handler)
         _logger.propagate = False
 
@@ -43,17 +43,17 @@ class KISSUtilTestCase(unittest.TestCase):
         """
         Tests `kiss.escape_special_codes` util function.
         """
-        fend = kiss.escape_special_codes(kiss.constants.FEND)
+        fend = kiss.escape_special_codes(kiss.FEND)
         self._logger.debug('fend=%s', fend)
-        self.assertEqual(fend, kiss.constants.FESC_TFEND)
+        self.assertEqual(fend, kiss.FESC_TFEND)
 
     def test_escape_special_codes_fesc(self):
         """
         Tests `kiss.escape_special_codes` util function.
         """
-        fesc = kiss.escape_special_codes(kiss.constants.FESC)
+        fesc = kiss.escape_special_codes(kiss.FESC)
         self._logger.debug('fesc=%s', fesc)
-        self.assertEqual(fesc, kiss.constants.FESC_TFESC)
+        self.assertEqual(fesc, kiss.FESC_TFESC)
 
     def test_extract_ui(self):
         """

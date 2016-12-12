@@ -121,8 +121,6 @@ class KISS(object):
                 # Handle NMEAPASS on T3-Micro
                 if len(read_data) >= 900:
                     if kiss.NMEA_HEADER in read_data and '\r\n' in read_data:
-                        print read_data.encode('hex')
-                        print len(read_data)
                         if callback:
                             callback(read_data)
                         elif not readmode:
@@ -147,7 +145,7 @@ class KISS(object):
                     # Iterate through split_data and extract just the frames.
                     for i in range(0, len_fend - 1):
                         _str = ''.join([read_buffer, split_data[i]])
-                        self._logger.debug('_str="%s"', _str)
+                        self._logger.debug('i=%s _str="%s"', i, _str)
                         if _str:
                             frames.append(_str)
                             read_buffer = ''
@@ -200,8 +198,7 @@ class TCPKISS(KISS):
     """KISS TCP Class."""
 
     def __init__(self, host, port, strip_df_start=False):
-        self.host = host
-        self.port = port
+        self.address = (host, int(port))
         self.strip_df_start = strip_df_start
         super(TCPKISS, self).__init__(strip_df_start)
 
@@ -210,8 +207,7 @@ class TCPKISS(KISS):
         read_data = self.interface.recv(read_bytes)
         self._logger.debug('len(read_data)=%s', len(read_data))
         if read_data == '':
-            self._logger.warn('Socket closed')
-            return
+            raise kiss.SocketClosetError('Socket Closed')
         return read_data
 
     def stop(self):
@@ -222,7 +218,9 @@ class TCPKISS(KISS):
         """
         Initializes the KISS device and commits configuration.
         """
-        self.interface = socket.create_connection((self.host, self.port))
+        self.interface = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._logger.debug('Conntecting to %s', self.address)
+        self.interface.connect(self.address)
         self._write_handler = self.interface.send
 
 

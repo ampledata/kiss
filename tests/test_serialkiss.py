@@ -26,10 +26,10 @@ class SerialKISSTestCase(unittest.TestCase):
 
     _logger = logging.getLogger(__name__)
     if not _logger.handlers:
-        _logger.setLevel(kiss.constants.LOG_LEVEL)
+        _logger.setLevel(kiss.LOG_LEVEL)
         _console_handler = logging.StreamHandler()
-        _console_handler.setLevel(kiss.constants.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.constants.LOG_FORMAT)
+        _console_handler.setLevel(kiss.LOG_LEVEL)
+        _console_handler.setFormatter(kiss.LOG_FORMAT)
         _logger.addHandler(_console_handler)
         _logger.propagate = False
 
@@ -114,10 +114,10 @@ class SerialKISSTestCase(unittest.TestCase):
         self._logger.debug('frame_escaped="%s"', frame_escaped)
 
         frame_kiss = ''.join([
-            kiss.constants.FEND,
-            kiss.constants.DATA_FRAME,
+            kiss.FEND,
+            kiss.DATA_FRAME,
             frame_escaped,
-            kiss.constants.FEND
+            kiss.FEND
         ])
         self._logger.debug('frame_kiss="%s"', frame_kiss)
 

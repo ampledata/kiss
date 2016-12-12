@@ -76,3 +76,5 @@ def strip_df_start(frame):
 def strip_nmea(frame):
     if ord(frame[0]) == 240:
         return frame[1:].rstrip()
+    else:
+        return frame

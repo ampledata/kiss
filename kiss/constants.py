@@ -11,7 +11,7 @@ __license__ = 'Apache License, Version 2.0'
 import logging
 
 
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 LOG_FORMAT = logging.Formatter(
     '%(asctime)s kiss %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
     ' - %(message)s')
