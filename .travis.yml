@@ -6,4 +6,4 @@ python:
 
 install: make
 
-script: make nosetests
+script: make install_requirements nosetests
