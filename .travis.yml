@@ -4,6 +4,6 @@ python:
   - "2.7"
   - "3.5"
 
-install: make
+install: make develop install_requirements
 
-script: make install_requirements nosetests
+script: make nosetests
