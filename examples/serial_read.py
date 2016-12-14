@@ -28,30 +28,16 @@ Test output should be as follows:
 
 """
 
-
 import aprs
 import kiss
-import logging
 
 
 def print_frame(frame):
-    try:
-        print frame
-        # Decode raw APRS frame into dictionary of separate sections
-        aprs_frame = aprs.APRSFrame(frame)
-
-        # This is the human readable APRS output:
-        print aprs_frame
-
-    except Exception as ex:
-        print ex
-        print "Error decoding frame:"
-        print "\t%s" % frame
+    print(aprs.Frame(frame))
 
 
 def main():
     ki = kiss.SerialKISS(port='/dev/cu.Repleo-PL2303-00303114', speed='9600')
-    #ki._logger.setLevel(logging.INFO)
     ki.start()
     ki.read(callback=print_frame, readmode=True)
 
