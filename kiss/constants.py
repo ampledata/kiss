@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Constants for KISS Python Module."""
+"""Python KISS Module Constants."""
+
+import logging
 
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
 __license__ = 'Apache License, Version 2.0'
-
-
-import logging
 
 
 LOG_LEVEL = logging.DEBUG
@@ -21,15 +20,25 @@ READ_BYTES = 1000
 
 # KISS Special Characters
 # http://en.wikipedia.org/wiki/KISS_(TNC)#Special_Characters
-FEND = chr(0xC0)
-FESC = chr(0xDB)
+# http://k4kpk.com/content/notes-aprs-kiss-and-setting-tnc-x-igate-and-digipeater
+# Frames begin and end with a FEND/Frame End/0xC0 byte
+FEND = chr(0xC0)  # Marks START and END of a Frame
+FESC = chr(0xDB)  # Escapes FEND and FESC bytes within a frame
+
+# Transpose Bytes: Used within a frame-
+# "Transpose FEND": An FEND after an FESC (within a frame)-
+# Sent as FESC TFEND
 TFEND = chr(0xDC)
+# "Transpose FESC": An FESC after an FESC (within a frame)-
+# Sent as FESC TFESC
 TFESC = chr(0xDD)
 
 # "FEND is sent as FESC, TFEND"
+# 0xC0 is sent as 0xDB 0xDC
 FESC_TFEND = ''.join([FESC, TFEND])
 
 # "FESC is sent as FESC, TFESC"
+# 0xDB is sent as 0xDB 0xDD
 FESC_TFESC = ''.join([FESC, TFESC])
 
 # KISS Command Codes
@@ -60,3 +69,8 @@ DEFAULT_KISS_CONFIG_VALUES = {
     'TX_TAIL': 30,
     'FULL_DUPLEX': 0,
 }
+
+KISS_ON = 'KISS $0B'
+KISS_OFF = ''.join([FEND, chr(0xFF), FEND, FEND])
+
+NMEA_HEADER = ''.join([FEND, chr(0xF0), '$'])

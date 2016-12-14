@@ -27,7 +27,10 @@ uninstall:
 reinstall: uninstall install
 
 remember:
-	@echo "Don't forget to 'make install_requirements'"
+	@echo
+	@echo "Hello from the Makefile..."
+	@echo "Don't forget to run: 'make install_requirements'"
+	@echo
 
 clean:
 	@rm -rf *.egg* build dist *.py[oc] */*.py[co] cover doctest_pypi.cfg \
@@ -43,8 +46,12 @@ nosetests: remember
 pep8: remember
 	flake8 --max-complexity 12 --exit-zero kiss/*.py tests/*.py
 
+flake8: pep8
+
 lint: remember
 	pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" \
 		-r n kiss/*.py tests/*.py || exit 0
+
+pylint: lint
 
 test: lint pep8 nosetests

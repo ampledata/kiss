@@ -8,3 +8,5 @@
 
 flake8
 pylint
+aprs
+twine
