@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Utilities for the KISS Python Module."""
+"""Python KISS Module Utility Functions Definitions."""
 
-import kiss.constants
+import kiss
 
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
 __copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
@@ -20,11 +20,11 @@ def escape_special_codes(raw_codes):
     - http://en.wikipedia.org/wiki/KISS_(TNC)#Description
     """
     return raw_codes.replace(
-        kiss.constants.FESC,
-        kiss.constants.FESC_TFESC
+        kiss.FESC,
+        kiss.FESC_TFESC
     ).replace(
-        kiss.constants.FEND,
-        kiss.constants.FESC_TFEND
+        kiss.FEND,
+        kiss.FESC_TFEND
     )
 
 
@@ -38,11 +38,11 @@ def recover_special_codes(escaped_codes):
     - http://en.wikipedia.org/wiki/KISS_(TNC)#Description
     """
     return escaped_codes.replace(
-        kiss.constants.FESC_TFESC,
-        kiss.constants.FESC
+        kiss.FESC_TFESC,
+        kiss.FESC
     ).replace(
-        kiss.constants.FESC_TFEND,
-        kiss.constants.FEND
+        kiss.FESC_TFEND,
+        kiss.FEND
     )
 
 
@@ -56,8 +56,8 @@ def extract_ui(frame):
     :rtype: str
     """
     start_ui = frame.split(
-        ''.join([kiss.constants.FEND, kiss.constants.DATA_FRAME]))
-    end_ui = start_ui[0].split(''.join([kiss.constants.SLOT_TIME, chr(0xF0)]))
+        ''.join([kiss.FEND, kiss.DATA_FRAME]))
+    end_ui = start_ui[0].split(''.join([kiss.SLOT_TIME, chr(0xF0)]))
     return ''.join([chr(ord(x) >> 1) for x in end_ui[0]])
 
 

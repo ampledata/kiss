@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""KISS Core Classes."""
+"""Python KISS Module Class Definitions."""
 
 import logging
 import socket
@@ -41,13 +41,13 @@ class KISS(object):
     def __del__(self):
         self.stop()
 
-    def _read_handler(self):
+    def _read_handler(self, read_bytes=None):  # pylint: disable=R0201
         """
         Helper method to call when reading from KISS interface.
         """
-        pass
+        read_bytes = read_bytes or kiss.READ_BYTES
 
-    def _write_handler(self, frame=None):
+    def _write_handler(self, frame=None):  # pylint: disable=R0201
         """
         Helper method to call when writing to KISS interface.
         """
@@ -87,7 +87,7 @@ class KISS(object):
             kiss.FEND
         )
 
-    def read(self, read_bytes=None, callback=None, readmode=True):
+    def read(self, read_bytes=None, callback=None, readmode=True):  # NOQA pylint: disable=R0912
         """
         Reads data from KISS device.
 
@@ -165,7 +165,8 @@ class KISS(object):
                     frames = map(kiss.strip_df_start, frames)
 
                 if readmode:
-                    [callback(frame) for frame in frames]
+                    for frame in frames:
+                        callback(frame)
                 elif not readmode:
                     return frames
 
@@ -265,9 +266,11 @@ class SerialKISS(KISS):
             **kiss.DEFAULT_KISS_CONFIG_VALUES)
 
     def kiss_on(self):
+        """Turns KISS ON."""
         self.interface.write(kiss.KISS_ON)
 
     def kiss_off(self):
+        """Turns KISS OFF."""
         self.interface.write(kiss.KISS_OFF)
 
     def stop(self):

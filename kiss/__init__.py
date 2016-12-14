@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# KISS Python Module.
+# Python KISS Module.
 
 """
-KISS Python Module.
+Python KISS Module.
 ~~~~
 
 

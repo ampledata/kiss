@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Constants for KISS Python Module."""
+"""Python KISS Module Constants."""
 
 import logging
 
