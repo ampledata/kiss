@@ -77,7 +77,7 @@ def strip_nmea(frame):
     """
     Extracts NMEA header from T3-Micro or NMEA encoded KISS frames.
     """
-    if ord(frame[0]) == 240:
-        return frame[1:].rstrip()
-    else:
-        return frame
+    if len(frame) > 0:
+        if ord(frame[0]) == 240:
+            return frame[1:].rstrip()
+    return frame

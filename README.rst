@@ -1,7 +1,7 @@
 kiss - Python KISS Module
 *************************
 
-kiss is a Python Module that implementations the `KISS <https://en.wikipedia.org/wiki/KISS_(TNC)>`_ Protocol for
+kiss is a Python Module that implementations the `KISS Protocol <https://en.wikipedia.org/wiki/KISS_(TNC)>`_ for
 communicating with KISS-enabled devices (such as Serial or TCP TNCs).
 
 Installation
@@ -35,11 +35,11 @@ Run nosetests from a Makefile target::
 See Also
 ========
 
-* `aprs <https://github.com/ampledata/aprs>`_ Python APRS Module. Interface for APRS, APRS-IS, and APRS over KISS.
-* `kiss <https://github.com/ampledata/kiss>`_ Python KISS Module. Handles interfacing-to and encoding-for various KISS interfaces.
+* `Python APRS Module <https://github.com/ampledata/aprs>`_ Library for sending, receiving and parsing APRS Frames to and from multiple Interfaces
+* `Python KISS Module <https://github.com/ampledata/kiss>`_ Handles interfacing-to and encoding-for various KISS Interfaces.
+* `Python APRS Gateway <https://github.com/ampledata/aprsgate>`_ Uses Redis PubSub to run a multi-interface APRS Gateway.
+* `Python APRS Tracker <https://github.com/ampledata/aprstracker>`_ TK.
 * `dirus <https://github.com/ampledata/dirus>`_ Dirus is a daemon for managing a SDR to Dire Wolf interface. Manifests that interface as a KISS TCP port.
-* `aprsgate <https://github.com/ampledata/aprsgate>`_ Python APRS Gateway. Uses Redis PubSub to run a multi-interface APRS Gateway.
-* `aprstracker <https://github.com/ampledata/aprstracker>`_ TK.
 
 
 Similar Projects
@@ -82,7 +82,7 @@ Copyright
 =========
 Copyright 2016 Orion Labs, Inc. and Contributors
 
-`APRS <http://www.aprs.org/>`_ is Copyright Bob Bruninga WB4APR wb4apr@amsat.org
+`Automatic Packet Reporting System (APRS) <http://www.aprs.org/>`_ is Copyright Bob Bruninga WB4APR wb4apr@amsat.org
 
 License
 =======
