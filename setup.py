@@ -12,9 +12,9 @@ import setuptools
 import sys
 
 __title__ = 'kiss'
-__version__ = '6.0.1'
+__version__ = '7.0.0b1'
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -47,7 +47,7 @@ setuptools.setup(
         'nose >= 1.3.7',
         'dummyserial'
     ],
-    install_requires=['pyserial >= 2.7'],
+    install_requires=['pyserial >= 3.0'],
     classifiers=[
         'Topic :: Communications :: Ham Radio',
         'Programming Language :: Python',

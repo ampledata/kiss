@@ -4,7 +4,7 @@
 """Tests for KISS Classes."""
 
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -59,11 +59,11 @@ class SerialKISSTestCase(unittest.TestCase):
         :type alphabet: str
         """
         alphabet = alphabet or constants.ALPHANUM
-        return ''.join(random.choice(alphabet) for _ in xrange(length))
+        return ''.join(random.choice(alphabet) for _ in range(length))
 
     @classmethod
     def print_frame(cls, frame):
-        print(aprs.Frame(frame))
+        print((aprs.Frame(frame)))
 
     def test_write(self):
         ks = kiss.SerialKISS(port=self.random_serial_port, speed='9600')

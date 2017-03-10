@@ -4,13 +4,18 @@
 """Python KISS Module Constants."""
 
 import logging
+import os
 
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
-LOG_LEVEL = logging.DEBUG
+if bool(os.environ.get('DEBUG_KISS')) or bool(os.environ.get('DEBUG_ALL')):
+    LOG_LEVEL = logging.DEBUG
+else:
+    LOG_LEVEL = logging.INFO
+
 LOG_FORMAT = logging.Formatter(
     '%(asctime)s kiss %(levelname)s %(name)s.%(funcName)s:%(lineno)d'
     ' - %(message)s')
@@ -22,35 +27,35 @@ READ_BYTES = 1000
 # http://en.wikipedia.org/wiki/KISS_(TNC)#Special_Characters
 # http://k4kpk.com/content/notes-aprs-kiss-and-setting-tnc-x-igate-and-digipeater
 # Frames begin and end with a FEND/Frame End/0xC0 byte
-FEND = chr(0xC0)  # Marks START and END of a Frame
-FESC = chr(0xDB)  # Escapes FEND and FESC bytes within a frame
+FEND = b'\xC0'  # Marks START and END of a Frame
+FESC = b'\xDB'  # Escapes FEND and FESC bytes within a frame
 
 # Transpose Bytes: Used within a frame-
 # "Transpose FEND": An FEND after an FESC (within a frame)-
 # Sent as FESC TFEND
-TFEND = chr(0xDC)
+TFEND = b'\xDC'
 # "Transpose FESC": An FESC after an FESC (within a frame)-
 # Sent as FESC TFESC
-TFESC = chr(0xDD)
+TFESC = b'\xDD'
 
 # "FEND is sent as FESC, TFEND"
 # 0xC0 is sent as 0xDB 0xDC
-FESC_TFEND = ''.join([FESC, TFEND])
+FESC_TFEND = b''.join([FESC, TFEND])
 
 # "FESC is sent as FESC, TFESC"
 # 0xDB is sent as 0xDB 0xDD
-FESC_TFESC = ''.join([FESC, TFESC])
+FESC_TFESC = b''.join([FESC, TFESC])
 
 # KISS Command Codes
 # http://en.wikipedia.org/wiki/KISS_(TNC)#Command_Codes
-DATA_FRAME = chr(0x00)
-TX_DELAY = chr(0x01)
-PERSISTENCE = chr(0x02)
-SLOT_TIME = chr(0x03)
-TX_TAIL = chr(0x04)
-FULL_DUPLEX = chr(0x05)
-SET_HARDWARE = chr(0x06)
-RETURN = chr(0xFF)
+DATA_FRAME = b'\x00'
+TX_DELAY = b'\x01'
+PERSISTENCE = b'\x02'
+SLOT_TIME = b'\x03'
+TX_TAIL = b'\x04'
+FULL_DUPLEX = b'\x05'
+SET_HARDWARE = b'\x06'
+RETURN = b'\xFF'
 
 # Alternate convenience spellings for Command Codes
 # (these more closely match the names in the spec)
@@ -71,6 +76,8 @@ DEFAULT_KISS_CONFIG_VALUES = {
 }
 
 KISS_ON = 'KISS $0B'
-KISS_OFF = ''.join([FEND, chr(0xFF), FEND, FEND])
+KISS_OFF = b''.join([FEND, RETURN, FEND, FEND])
 
-NMEA_HEADER = ''.join([FEND, chr(0xF0), '$'])
+NMEA_HEADER = b''.join([FEND, b'\xF0', b'$'])
+
+UI_PROTOCOL_ID = b'\xF0'

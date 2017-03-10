@@ -6,7 +6,7 @@
 import kiss
 
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
 __license__ = 'Apache License, Version 2.0'
 
 
@@ -57,8 +57,8 @@ def extract_ui(frame):
     """
     start_ui = frame.split(
         ''.join([kiss.FEND, kiss.DATA_FRAME]))
-    end_ui = start_ui[0].split(''.join([kiss.SLOT_TIME, chr(0xF0)]))
-    return ''.join([chr(ord(x) >> 1) for x in end_ui[0]])
+    end_ui = start_ui[0].split(b''.join([kiss.SLOT_TIME, kiss.UI_PROTOCOL_ID]))
+    return b''.join([chr(ord(x) >> 1) for x in end_ui[0]])
 
 
 def strip_df_start(frame):
@@ -78,6 +78,6 @@ def strip_nmea(frame):
     Extracts NMEA header from T3-Micro or NMEA encoded KISS frames.
     """
     if len(frame) > 0:
-        if ord(frame[0]) == 240:
+        if frame[0] == 240:
             return frame[1:].rstrip()
     return frame
