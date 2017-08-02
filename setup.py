@@ -12,7 +12,7 @@ import setuptools
 import sys
 
 __title__ = 'kiss'
-__version__ = '6.5.0b2'
+__version__ = '7.0.0b1'
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
 __copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
 __license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
@@ -46,7 +46,7 @@ setuptools.setup(
         'coverage >= 4.4.1',
         'nose >= 1.3.7',
         'dummyserial >= 1.0.0',
-        'aprs > 6.4, < 7.0',
+        'aprs > 6.9',
         'mocket >= 1.8.2'
     ],
     install_requires=['pyserial >= 3.4'],
