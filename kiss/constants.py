@@ -6,13 +6,14 @@
 import logging
 import os
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
-__license__ = 'Apache License, Version 2.0'
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
-if bool(os.environ.get('DEBUG_KISS')) or bool(os.environ.get('DEBUG_ALL')):
+if bool(os.environ.get('DEBUG')):
     LOG_LEVEL = logging.DEBUG
+    logging.debug('Debugging Enabled via DEBUG Environment Variable.')
 else:
     LOG_LEVEL = logging.INFO
 
