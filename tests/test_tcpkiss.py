@@ -3,38 +3,26 @@
 
 """Tests for TCPKISS Class."""
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2016 Orion Labs, Inc. and Contributors'
-__license__ = 'Apache License, Version 2.0'
-
-
-import logging
-import random
 import unittest
 
 import aprs
 
-from mocket.mocket import Mocket, MocketEntry, MocketSocket, mocketize, create_connection
+from mocket.mocket import (Mocket, MocketEntry, MocketSocket, mocketize,
+                           create_connection)
 
 from .context import kiss
+from .context import kiss_test_classes  # pylint: disable=R0801
 
 from . import constants
 
-import kiss   # FIXME
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
-class TCPKISSTestCase(unittest.TestCase):
+class TCPKISSTestCase(kiss_test_classes.KISSTestClass):
 
     """Test class for KISS Python Module."""
-
-    _logger = logging.getLogger(__name__)
-    if not _logger.handlers:
-        _logger.setLevel(kiss.LOG_LEVEL)
-        _console_handler = logging.StreamHandler()
-        _console_handler.setLevel(kiss.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.LOG_FORMAT)
-        _logger.addHandler(_console_handler)
-        _logger.propagate = False
 
     def setUp(self):
         """Setup."""
@@ -51,22 +39,6 @@ class TCPKISSTestCase(unittest.TestCase):
     def tearDown(self):
         """Teardown."""
         self.test_frames.close()
-
-    @classmethod
-    def random(cls, length=8, alphabet=None):
-        """
-        Generates a random string for test cases.
-        :param length: Length of string to generate.
-        :param alphabet: Alphabet to use to create string.
-        :type length: int
-        :type alphabet: str
-        """
-        alphabet = alphabet or constants.ALPHANUM
-        return ''.join(random.choice(alphabet) for _ in xrange(length))
-
-    @classmethod
-    def print_frame(cls, frame):
-        print(aprs.Frame(frame))
 
     @mocketize
     def _test_write(self):
@@ -89,7 +61,9 @@ class TCPKISSTestCase(unittest.TestCase):
 
         ks.interface = create_connection(a)
         ks._write_handler = ks.interface.sendall
+
         def _pass(): pass
+
         ks.stop = _pass
 
         ks.write(kiss_frame)
@@ -127,12 +101,13 @@ class TCPKISSTestCase(unittest.TestCase):
         self._logger.info(
             '_read_data(%s)="%s"', len(_read_data), _read_data)
 
-        #read_data = _read_data[0]
-        #self._logger.debug(
+        # read_data = _read_data[0]
+        # self._logger.debug(
         #    'frame_kiss(%s)="%s"', len(frame_kiss), frame_kiss)
-        #self._logger.debug(
+        # self._logger.debug(
         #    'read_data(%s)="%s"', len(read_data), read_data)
-        #self.assertEqual(read_data, frame_kiss.split(kiss.FEND)[1])
+        # self.assertEqual(read_data, frame_kiss.split(kiss.FEND)[1])
+
 
 if __name__ == '__main__':
     unittest.main()

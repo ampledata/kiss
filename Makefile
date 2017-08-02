@@ -2,7 +2,7 @@
 #
 # Source:: https://github.com/ampledata/kiss
 # Author:: Greg Albrecht W2GMD <oss@undef.net>
-# Copyright:: Copyright 2016 Orion Labs, Inc. and Contributors
+# Copyright:: Copyright 2017 Greg Albrecht and Contributors
 # License:: Apache License, Version 2.0
 #
 
@@ -50,8 +50,11 @@ flake8: pep8
 
 lint: remember
 	pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" \
-		-r n kiss/*.py tests/*.py || exit 0
+		-r n --ignore-imports=y kiss/*.py tests/*.py || exit 0
 
 pylint: lint
 
-test: lint pep8 nosetests
+coverage:
+	coverage report -m
+	
+test: lint pep8 nosetests coverage

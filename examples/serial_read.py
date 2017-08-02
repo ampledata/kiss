@@ -33,7 +33,7 @@ import kiss
 
 
 def print_frame(frame):
-    print(aprs.Frame(frame))
+    print((aprs.Frame(frame)))
 
 
 def main():

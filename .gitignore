@@ -29,3 +29,5 @@ output.xml
 pylint.log
 redis-server.log
 redis-server/
+__pycache__
+*/__pycache__
