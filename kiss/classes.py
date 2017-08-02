@@ -81,10 +81,12 @@ class KISS(object):
             value = chr(value)
 
         return self.interface.write(
-            kiss.FEND +
-            getattr(kiss, name.upper()) +
-            kiss.escape_special_codes(value) +
-            kiss.FEND
+            b''.join([
+                kiss.FEND,
+                bytes(getattr(kiss, name.upper())),
+                #kiss.escape_special_codes(value),
+                kiss.FEND
+            ])
         )
 
     def read(self, read_bytes=None, callback=None, readmode=True):  # NOQA pylint: disable=R0912
@@ -282,8 +284,12 @@ class SerialKISS(KISS):
         self.interface.write(kiss.KISS_OFF)
 
     def stop(self):
-        if self.interface and self.interface.isOpen():
-            self.interface.close()
+        try:
+            if self.interface and self.interface.isOpen():
+                self.interface.close()
+        except AttributeError:
+            if self.interface and self.interface._isOpen:
+                self.interface.close()
 
     def start(self, **kwargs):
         """
