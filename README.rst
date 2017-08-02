@@ -65,13 +65,13 @@ Build Status
 
 Master:
 
-.. image:: https://travis-ci.org/ampledata/aprs.svg?branch=master
-    :target: https://travis-ci.org/ampledata/aprs
+.. image:: https://travis-ci.org/ampledata/kiss.svg?branch=master
+    :target: https://travis-ci.org/ampledata/kiss
 
 Develop:
 
-.. image:: https://travis-ci.org/ampledata/aprs.svg?branch=develop
-    :target: https://travis-ci.org/ampledata/aprs
+.. image:: https://travis-ci.org/ampledata/kiss.svg?branch=develop
+    :target: https://travis-ci.org/ampledata/kiss
 
 
 Source
