@@ -3,9 +3,9 @@
 
 """Tests for TCPKISS Class."""
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
-__license__ = 'Apache License, Version 2.0'
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
 import logging
@@ -14,27 +14,28 @@ import unittest
 
 import aprs
 
-from mocket.mocket import Mocket, MocketEntry, MocketSocket, mocketize, create_connection
+from mocket.mocket import (Mocket, MocketEntry, MocketSocket, mocketize,
+    create_connection)
 
 from .context import kiss
 
 from . import constants
 
-import kiss   # FIXME
+#import kiss   # FIXME
 
 
 class TCPKISSTestCase(unittest.TestCase):
 
     """Test class for KISS Python Module."""
 
-    _logger = logging.getLogger(__name__)
-    if not _logger.handlers:
-        _logger.setLevel(kiss.LOG_LEVEL)
-        _console_handler = logging.StreamHandler()
-        _console_handler.setLevel(kiss.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.LOG_FORMAT)
-        _logger.addHandler(_console_handler)
-        _logger.propagate = False
+    _logger = logging.getLogger(__name__)  # pylint: disable=R0801
+    if not _logger.handlers:  # pylint: disable=R0801
+        _logger.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
+        _console_handler = logging.StreamHandler()  # pylint: disable=R0801
+        _console_handler.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
+        _console_handler.setFormatter(kiss.LOG_FORMAT)  # pylint: disable=R0801
+        _logger.addHandler(_console_handler)  # pylint: disable=R0801
+        _logger.propagate = False  # pylint: disable=R0801
 
     def setUp(self):
         """Setup."""
@@ -66,7 +67,7 @@ class TCPKISSTestCase(unittest.TestCase):
 
     @classmethod
     def print_frame(cls, frame):
-        print((aprs.Frame(frame)))
+        print('{}'.format(aprs.Frame(frame)))
 
     @mocketize
     def _test_write(self):
@@ -89,7 +90,9 @@ class TCPKISSTestCase(unittest.TestCase):
 
         ks.interface = create_connection(a)
         ks._write_handler = ks.interface.sendall
+
         def _pass(): pass
+
         ks.stop = _pass
 
         ks.write(kiss_frame)
@@ -127,12 +130,13 @@ class TCPKISSTestCase(unittest.TestCase):
         self._logger.info(
             '_read_data(%s)="%s"', len(_read_data), _read_data)
 
-        #read_data = _read_data[0]
-        #self._logger.debug(
+        # read_data = _read_data[0]
+        # self._logger.debug(
         #    'frame_kiss(%s)="%s"', len(frame_kiss), frame_kiss)
-        #self._logger.debug(
+        # self._logger.debug(
         #    'read_data(%s)="%s"', len(read_data), read_data)
-        #self.assertEqual(read_data, frame_kiss.split(kiss.FEND)[1])
+        # self.assertEqual(read_data, frame_kiss.split(kiss.FEND)[1])
+
 
 if __name__ == '__main__':
     unittest.main()

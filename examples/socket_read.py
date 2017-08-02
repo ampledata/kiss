@@ -53,17 +53,17 @@ def main2():
                             [0xF0, 0xCF]):
 
                         text = frame[frame_slice + 3:]
-                        print("Text=%s" % text)
+                        print('Text={}'.format(text))
 
                         dest = aprs.Callsign(frame)
                         dest2 = aprs.Callsign2(frame, True)
-                        print(dest)
-                        print(dest2.callsign)
+                        print('{}'.format(dest))
+                        print("{}".format(dest2.callsign))
 
                         src = aprs.Callsign(frame[7:])
                         src2 = aprs.Callsign2(frame[7:], True)
-                        print(src)
-                        print(src2.callsign)
+                        print("{}".format(src))
+                        print("{}".format(src2.callsign))
                         path = []
                         for x in range(2, 1):
                             path_call = aprs.Callsign(frame[x * 7:])
@@ -73,7 +73,7 @@ def main2():
                                     path_call.digi = True
 
                             path.append(path_call)
-                        print(path)
+                        print("{}".format(path))
 
 def test():
     # http://www.tapr.org/pdf/AX25.2.2.pdf

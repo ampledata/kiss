@@ -3,32 +3,30 @@
 
 """Tests for KISS Util Module."""
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
-__license__ = 'Apache License, Version 2.0'
+import logging  # pylint: disable=R0801
+import unittest  # pylint: disable=R0801
+
+from .context import kiss  # pylint: disable=R0801
+
+from . import constants  # pylint: disable=R0801
+
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
-import logging
-import unittest
-
-from .context import kiss
-
-from . import constants
-
-
-# pylint: disable=R0904,C0103
-class KISSUtilTestCase(unittest.TestCase):
+class KISSUtilTestCase(unittest.TestCase):  # pylint: disable=R0904,C0103
 
     """Test class for KISS Python Module."""
 
-    _logger = logging.getLogger(__name__)
-    if not _logger.handlers:
-        _logger.setLevel(kiss.LOG_LEVEL)
-        _console_handler = logging.StreamHandler()
-        _console_handler.setLevel(kiss.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.LOG_FORMAT)
-        _logger.addHandler(_console_handler)
-        _logger.propagate = False
+    _logger = logging.getLogger(__name__)  # pylint: disable=R0801
+    if not _logger.handlers:  # pylint: disable=R0801
+        _logger.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
+        _console_handler = logging.StreamHandler()  # pylint: disable=R0801
+        _console_handler.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
+        _console_handler.setFormatter(kiss.LOG_FORMAT)  # pylint: disable=R0801
+        _logger.addHandler(_console_handler)  # pylint: disable=R0801
+        _logger.propagate = False  # pylint: disable=R0801
 
     def setUp(self):
         """Setup."""

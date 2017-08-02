@@ -10,23 +10,23 @@ import serial
 
 import kiss
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'
-__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'
-__license__ = 'Apache License, Version 2.0'
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
 class KISS(object):
 
     """KISS Object Class."""
 
-    _logger = logging.getLogger(__name__)
-    if not _logger.handlers:
-        _logger.setLevel(kiss.LOG_LEVEL)
-        _console_handler = logging.StreamHandler()
-        _console_handler.setLevel(kiss.LOG_LEVEL)
-        _console_handler.setFormatter(kiss.LOG_FORMAT)
-        _logger.addHandler(_console_handler)
-        _logger.propagate = False
+    _logger = logging.getLogger(__name__)  # pylint: disable=R0801
+    if not _logger.handlers:  # pylint: disable=R0801
+        _logger.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
+        _console_handler = logging.StreamHandler()  # pylint: disable=R0801
+        _console_handler.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
+        _console_handler.setFormatter(kiss.LOG_FORMAT)  # pylint: disable=R0801
+        _logger.addHandler(_console_handler)  # pylint: disable=R0801
+        _logger.propagate = False  # pylint: disable=R0801
 
     def __init__(self, strip_df_start=False):
         self.strip_df_start = strip_df_start
@@ -244,7 +244,12 @@ class SerialKISS(KISS):
         read_bytes = read_bytes or kiss.READ_BYTES
         read_data = self.interface.read(read_bytes)
         self._logger.debug('len(read_data)=%s', len(read_data))
-        waiting_data = self.interface.in_waiting
+
+        try:
+            waiting_data = self.interface.in_waiting
+        except AttributeError:
+            waiting_data = self.interface.outWaiting()
+
         if waiting_data:
             self._logger.debug('len(waiting_data)=%s', len(waiting_data))
             read_data = ''.join([

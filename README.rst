@@ -4,6 +4,12 @@ kiss - Python KISS Module
 kiss is a Python Module that implementations the `KISS Protocol <https://en.wikipedia.org/wiki/KISS_(TNC)>`_ for
 communicating with KISS-enabled devices (such as Serial or TCP TNCs).
 
+Versions
+========
+
+- 6.5.x branch will be the last version of this Module that supports Python 2.7.x
+- 7.x.x branch and-on will be Python 3.x ONLY.
+
 Installation
 ============
 Install from pypi using pip: ``pip install kiss``
