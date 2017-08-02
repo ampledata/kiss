@@ -27,7 +27,7 @@ class TCPKISSTestCase(kiss_test_classes.KISSTestClass):
     def setUp(self):
         """Setup."""
         self.test_frames = open(constants.TEST_FRAMES, 'r')
-        self.test_frame = self.test_frames.readlines()[0].strip()
+        self.test_frame = self.test_frames#.readlines()[0].strip()
         self.random_host = self.random()
         self.random_port = int(self.random(5, constants.NUMBERS))
         self._logger.debug(
