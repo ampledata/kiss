@@ -46,7 +46,7 @@ setuptools.setup(
         'coverage >= 4.4.1',
         'nose >= 1.3.7',
         'dummyserial >= 1.0.0',
-        'aprs < 7.0.0',
+        'aprs > 6.4, < 7.0',
         'mocket >= 1.8.2'
     ],
     install_requires=['pyserial >= 3.4'],

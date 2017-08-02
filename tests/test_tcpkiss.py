@@ -3,12 +3,6 @@
 
 """Tests for TCPKISS Class."""
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
-__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
-__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
-
-
-import logging
 import random
 import unittest
 
@@ -18,24 +12,19 @@ from mocket.mocket import (Mocket, MocketEntry, MocketSocket, mocketize,
     create_connection)
 
 from .context import kiss
+from .context import kiss_test_classes  # pylint: disable=R0801
 
 from . import constants
 
-#import kiss   # FIXME
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
-class TCPKISSTestCase(unittest.TestCase):
+
+class TCPKISSTestCase(kiss_test_classes.KISSTestClass):
 
     """Test class for KISS Python Module."""
-
-    _logger = logging.getLogger(__name__)  # pylint: disable=R0801
-    if not _logger.handlers:  # pylint: disable=R0801
-        _logger.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
-        _console_handler = logging.StreamHandler()  # pylint: disable=R0801
-        _console_handler.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
-        _console_handler.setFormatter(kiss.LOG_FORMAT)  # pylint: disable=R0801
-        _logger.addHandler(_console_handler)  # pylint: disable=R0801
-        _logger.propagate = False  # pylint: disable=R0801
 
     def setUp(self):
         """Setup."""
@@ -52,22 +41,6 @@ class TCPKISSTestCase(unittest.TestCase):
     def tearDown(self):
         """Teardown."""
         self.test_frames.close()
-
-    @classmethod
-    def random(cls, length=8, alphabet=None):
-        """
-        Generates a random string for test cases.
-        :param length: Length of string to generate.
-        :param alphabet: Alphabet to use to create string.
-        :type length: int
-        :type alphabet: str
-        """
-        alphabet = alphabet or constants.ALPHANUM
-        return ''.join(random.choice(alphabet) for _ in range(length))
-
-    @classmethod
-    def print_frame(cls, frame):
-        print('{}'.format(aprs.Frame(frame)))
 
     @mocketize
     def _test_write(self):

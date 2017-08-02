@@ -3,12 +3,6 @@
 
 """Tests for KISS Classes."""
 
-__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
-__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
-__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
-
-
-import logging
 import random
 import unittest
 
@@ -16,22 +10,18 @@ import aprs
 import dummyserial
 
 from .context import kiss
+from .context import kiss_test_classes  # pylint: disable=R0801
 
 from . import constants
 
+__author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
+__copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
+__license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
-class SerialKISSTestCase(unittest.TestCase):
+
+class SerialKISSTestCase(kiss_test_classes.KISSTestClass):
 
     """Test class for KISS Python Module."""
-
-    _logger = logging.getLogger(__name__)  # pylint: disable=R0801
-    if not _logger.handlers:  # pylint: disable=R0801
-        _logger.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
-        _console_handler = logging.StreamHandler()  # pylint: disable=R0801
-        _console_handler.setLevel(kiss.LOG_LEVEL)  # pylint: disable=R0801
-        _console_handler.setFormatter(kiss.LOG_FORMAT)  # pylint: disable=R0801
-        _logger.addHandler(_console_handler)  # pylint: disable=R0801
-        _logger.propagate = False  # pylint: disable=R0801
 
     def setUp(self):
         """Setup."""
@@ -48,22 +38,6 @@ class SerialKISSTestCase(unittest.TestCase):
     def tearDown(self):
         """Teardown."""
         self.test_frames.close()
-
-    @classmethod
-    def random(cls, length=8, alphabet=None):
-        """
-        Generates a random string for test cases.
-        :param length: Length of string to generate.
-        :param alphabet: Alphabet to use to create string.
-        :type length: int
-        :type alphabet: str
-        """
-        alphabet = alphabet or constants.ALPHANUM
-        return ''.join(random.choice(alphabet) for _ in range(length))
-
-    @classmethod
-    def print_frame(cls, frame):
-        print(aprs.Frame(frame))
 
     def test_write(self):
         ks = kiss.SerialKISS(port=self.random_serial_port, speed='9600')
