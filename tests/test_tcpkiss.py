@@ -3,13 +3,12 @@
 
 """Tests for TCPKISS Class."""
 
-import random
 import unittest
 
 import aprs
 
 from mocket.mocket import (Mocket, MocketEntry, MocketSocket, mocketize,
-    create_connection)
+                           create_connection)
 
 from .context import kiss
 from .context import kiss_test_classes  # pylint: disable=R0801
@@ -19,7 +18,6 @@ from . import constants
 __author__ = 'Greg Albrecht W2GMD <oss@undef.net>'  # NOQA pylint: disable=R0801
 __copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: disable=R0801
 __license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
-
 
 
 class TCPKISSTestCase(kiss_test_classes.KISSTestClass):

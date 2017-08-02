@@ -7,6 +7,8 @@ import logging
 import random
 import unittest
 
+import aprs
+
 from .context import kiss
 
 from . import constants

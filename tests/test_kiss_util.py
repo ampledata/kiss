@@ -3,7 +3,7 @@
 
 """Tests for KISS Util Module."""
 
-import logging  # pylint: disable=R0801
+import unittest
 
 from .context import kiss  # pylint: disable=R0801
 from .context import kiss_test_classes  # pylint: disable=R0801
@@ -15,7 +15,7 @@ __copyright__ = 'Copyright 2017 Greg Albrecht and Contributors'  # NOQA pylint: 
 __license__ = 'Apache License, Version 2.0'  # NOQA pylint: disable=R0801
 
 
-class KISSUtilTestCase(kiss_test_classes.KISSTestClass):  # pylint: disable=R0904,C0103
+class KISSUtilTestCase(kiss_test_classes.KISSTestClass):  # NOQA pylint: disable=R0904,C0103
 
     """Test class for KISS Python Module."""
 

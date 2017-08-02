@@ -3,7 +3,6 @@
 
 """Tests for KISS Classes."""
 
-import random
 import unittest
 
 import aprs
