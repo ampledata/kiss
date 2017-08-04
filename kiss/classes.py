@@ -104,7 +104,7 @@ class KISS(object):
             'read_bytes=%s callback="%s" readmode=%s',
             read_bytes, callback, readmode)
 
-        read_buffer = b''
+        read_buffer = bytearray()
 
         while 1:
             read_data = self._read_handler(read_bytes)
@@ -131,35 +131,35 @@ class KISS(object):
 
                 # No FEND in frame
                 if fends == 1:
-                    read_buffer = b''.join([read_buffer, split_data[0]])
+                    read_buffer = bytearray(b''.join([read_buffer, split_data[0]]))
                 # Single FEND in frame
                 elif fends == 2:
                     # Closing FEND found
                     if split_data[0]:
                         # Partial frame continued, otherwise drop
-                        frames.append(b''.join([read_buffer, split_data[0]]))
-                        read_buffer = b''
+                        frames.append(bytearray(b''.join([read_buffer, split_data[0]])))
+                        read_buffer = bytearray()
                     # Opening FEND found
                     else:
                         frames.append(read_buffer)
-                        read_buffer = split_data[1]
+                        read_buffer = bytearray(split_data[1])
 
                 # At least one complete frame received: [FEND, xxx, FEND]
                 elif fends >= 3:
 
                     # Iterate through split_data and extract just the frames.
                     for i in range(0, fends - 1):
-                        buf = b''.join([read_buffer, split_data[i]])
+                        buf = bytearray(b''.join([read_buffer, split_data[i]]))
                         self._logger.debug('i=%s buf="%s"', i, buf)
                         if buf:
                             self._logger.debug('Frame Found: "%s"', buf)
                             frames.append(buf)
-                            read_buffer = b''
+                            read_buffer = bytearray()
 
                     # TODO: What do I do?
                     if split_data[fends - 1]:
                         self._logger.debug('Mystery Conditional')
-                        read_buffer = split_data[fends - 1]
+                        read_buffer = bytearray(split_data[fends - 1])
 
                 # Fixup T3-Micro NMEA Sentences
                 frames = list(map(kiss.strip_nmea, frames))
