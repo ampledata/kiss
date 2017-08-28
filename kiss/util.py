@@ -56,9 +56,9 @@ def extract_ui(frame):
     :rtype: str
     """
     start_ui = frame.split(
-        ''.join([kiss.FEND, kiss.DATA_FRAME]))
+        b''.join([kiss.FEND, kiss.DATA_FRAME]))
     end_ui = start_ui[0].split(b''.join([kiss.SLOT_TIME, kiss.UI_PROTOCOL_ID]))
-    return b''.join([chr(ord(x) >> 1) for x in end_ui[0]])
+    return ''.join([chr(x >> 1) for x in end_ui[0]])
 
 
 def strip_df_start(frame):

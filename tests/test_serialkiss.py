@@ -24,7 +24,7 @@ class SerialKISSTestCase(kiss_test_classes.KISSTestClass):
 
     def setUp(self):
         """Setup."""
-        self.test_frames = open(constants.TEST_FRAMES, 'r')
+        self.test_frames = open(constants.TEST_FRAMES, 'rb')
         self.test_frame = self.test_frames.readlines()[0].strip()
         self.random_serial_port = self.random()
         self.random_baudrate = self.random(5, constants.NUMBERS)

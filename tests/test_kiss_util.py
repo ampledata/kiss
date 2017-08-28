@@ -21,7 +21,7 @@ class KISSUtilTestCase(kiss_test_classes.KISSTestClass):  # NOQA pylint: disable
 
     def setUp(self):
         """Setup."""
-        self.test_frames = open(constants.TEST_FRAMES, 'r')
+        self.test_frames = open(constants.TEST_FRAMES, 'rb')
         self.test_frame = self.test_frames.readlines()[0].strip()
 
     def tearDown(self):

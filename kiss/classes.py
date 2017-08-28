@@ -28,7 +28,7 @@ class KISS(object):
         _logger.addHandler(_console_handler)  # pylint: disable=R0801
         _logger.propagate = False  # pylint: disable=R0801
 
-    def __init__(self, strip_df_start=False):
+    def __init__(self, strip_df_start: bool=False) -> None:
         self.strip_df_start = strip_df_start
         self.interface = None
 
@@ -81,10 +81,12 @@ class KISS(object):
             value = chr(value)
 
         return self.interface.write(
-            kiss.FEND +
-            getattr(kiss, name.upper()) +
-            kiss.escape_special_codes(value) +
-            kiss.FEND
+            b''.join([
+                kiss.FEND,
+                bytes(getattr(kiss, name.upper())),
+                kiss.escape_special_codes(value),
+                kiss.FEND
+            ])
         )
 
     def read(self, read_bytes=None, callback=None, readmode=True):  # NOQA pylint: disable=R0912
@@ -102,7 +104,7 @@ class KISS(object):
             'read_bytes=%s callback="%s" readmode=%s',
             read_bytes, callback, readmode)
 
-        read_buffer = b''
+        read_buffer = bytes()
 
         while 1:
             read_data = self._read_handler(read_bytes)
@@ -129,14 +131,14 @@ class KISS(object):
 
                 # No FEND in frame
                 if fends == 1:
-                    read_buffer = b''.join([read_buffer, split_data[0]])
+                    read_buffer += split_data[0]
                 # Single FEND in frame
                 elif fends == 2:
                     # Closing FEND found
                     if split_data[0]:
                         # Partial frame continued, otherwise drop
                         frames.append(b''.join([read_buffer, split_data[0]]))
-                        read_buffer = b''
+                        read_buffer = bytes()
                     # Opening FEND found
                     else:
                         frames.append(read_buffer)
@@ -147,17 +149,17 @@ class KISS(object):
 
                     # Iterate through split_data and extract just the frames.
                     for i in range(0, fends - 1):
-                        buf = b''.join([read_buffer, split_data[i]])
+                        buf = bytearray(b''.join([read_buffer, split_data[i]]))
                         self._logger.debug('i=%s buf="%s"', i, buf)
                         if buf:
                             self._logger.debug('Frame Found: "%s"', buf)
                             frames.append(buf)
-                            read_buffer = b''
+                            read_buffer = bytearray()
 
                     # TODO: What do I do?
                     if split_data[fends - 1]:
                         self._logger.debug('Mystery Conditional')
-                        read_buffer = split_data[fends - 1]
+                        read_buffer = bytearray(split_data[fends - 1])
 
                 # Fixup T3-Micro NMEA Sentences
                 frames = list(map(kiss.strip_nmea, frames))
@@ -234,7 +236,8 @@ class SerialKISS(KISS):
 
     """KISS Serial Class."""
 
-    def __init__(self, port, speed, strip_df_start=False):
+    def __init__(self, port: str, speed: str,
+                 strip_df_start: bool=False) -> None:
         self.port = port
         self.speed = speed
         self.strip_df_start = strip_df_start
@@ -243,7 +246,8 @@ class SerialKISS(KISS):
     def _read_handler(self, read_bytes=None):
         read_bytes = read_bytes or kiss.READ_BYTES
         read_data = self.interface.read(read_bytes)
-        self._logger.debug('len(read_data)=%s', len(read_data))
+        if len(read_data) > 0:
+            self._logger.debug('len(read_data)=%s', len(read_data))
 
         try:
             waiting_data = self.interface.in_waiting
@@ -251,9 +255,8 @@ class SerialKISS(KISS):
             waiting_data = self.interface.outWaiting()
 
         if waiting_data:
-            self._logger.debug('len(waiting_data)=%s', len(waiting_data))
-            read_data = ''.join([
-                read_data, self.interface.read(waiting_data)])
+            self._logger.debug('waiting_data=%s', waiting_data)
+            read_data += self.interface.read(waiting_data)
         return read_data
 
     def _write_defaults(self, **kwargs):
@@ -282,8 +285,12 @@ class SerialKISS(KISS):
         self.interface.write(kiss.KISS_OFF)
 
     def stop(self):
-        if self.interface and self.interface.isOpen():
-            self.interface.close()
+        try:
+            if self.interface and self.interface.isOpen():
+                self.interface.close()
+        except AttributeError:
+            if self.interface and self.interface._isOpen:
+                self.interface.close()
 
     def start(self, **kwargs):
         """
