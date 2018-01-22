@@ -37,14 +37,23 @@ def recover_special_codes(escaped_codes):
     replaced by FESC code and FESC_TFEND is replaced by FEND code."
     - http://en.wikipedia.org/wiki/KISS_(TNC)#Description
     """
-    return escaped_codes.replace(
-        kiss.FESC_TFESC,
-        kiss.FESC
-    ).replace(
-        kiss.FESC_TFEND,
-        kiss.FEND
-    )
+    out = bytearray()
+    i = 0
+    while i < len(escaped_codes):
+        if escaped_codes[i] == kiss.FESC[0] and i + 1 < len(escaped_codes):
+            if escaped_codes[i + 1] == kiss.TFESC[0]:
+                out.append(kiss.FESC[0])
+                i += 1 #Skips over the next byte, which would be the TFESC
+            elif escaped_codes[i + 1] == kiss.TFEND[0]:
+                out.append(kiss.FEND[0])
+                i += 1
+            else:
+                out.append(escaped_codes[i])
+        else:
+            out.append(escaped_codes[i])
+        i += 1
 
+    return out
 
 def extract_ui(frame):
     """
