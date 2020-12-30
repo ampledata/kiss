@@ -190,7 +190,7 @@ class KISS(object):
         self._logger.debug(
             'frame_escaped(%s)="%s"', len(frame_escaped), frame_escaped)
 
-        frame_kiss = ''.join([
+        frame_kiss = b''.join([
             kiss.FEND,
             kiss.DATA_FRAME,
             frame_escaped,
