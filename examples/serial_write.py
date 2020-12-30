@@ -16,9 +16,9 @@ def main():
     frame.path = [aprs.Callsign('WIDE1-1')]
     frame.text = '>Hello World!'
 
-    ki = kiss.SerialKISS(port='/dev/cu.AP510-DevB', speed='9600')
+    ki = kiss.SerialKISS(port='/dev/ttyu0', speed='9600')
     ki.start()
-    ki.write(frame.encode_kiss())
+    ki.write(frame.encode_ax25())
 
 
 if __name__ == '__main__':
