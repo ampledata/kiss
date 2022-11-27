@@ -191,15 +191,15 @@ class KISS(object):
             'frame_escaped(%s)="%s"', len(frame_escaped), frame_escaped)
 
         frame_kiss = ''.join([
-            kiss.FEND,
-            kiss.DATA_FRAME,
+            str(kiss.FEND),
+            str(kiss.DATA_FRAME),
             frame_escaped,
-            kiss.FEND
+            str(kiss.FEND)
         ])
         self._logger.debug(
             'frame_kiss(%s)="%s"', len(frame_kiss), frame_kiss)
 
-        self._write_handler(frame_kiss)
+        self._write_handler(bytes(frame_kiss, "utf-8"))
 
 
 class TCPKISS(KISS):
