@@ -20,11 +20,11 @@ def escape_special_codes(raw_codes):
     - http://en.wikipedia.org/wiki/KISS_(TNC)#Description
     """
     return raw_codes.replace(
-        kiss.FESC,
-        kiss.FESC_TFESC
+        str(kiss.FESC),
+        str(kiss.FESC_TFESC)
     ).replace(
-        kiss.FEND,
-        kiss.FESC_TFEND
+        str(kiss.FEND),
+        str(kiss.FESC_TFEND)
     )
 
 
